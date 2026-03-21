@@ -1,0 +1,55 @@
+﻿@model FinalSem2Project.Models.KiteCallbackModel
+@{
+    ViewData["Title"] = "Connecting...";
+}
+
+<div style="max-width:480px;margin:0 auto">
+    <div class="card" style="text-align:center;padding:48px 40px">
+        @if (Model.Success)
+        {
+            <div style="width:72px;height:72px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--accent);margin:0 auto 24px">
+                <i class="fas fa-circle-check"></i>
+            </div>
+
+            <h3 style="font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--accent);margin-bottom:10px">Connected!</h3>
+            <p style="color:var(--text-secondary);margin-bottom:6px">@Model.Message</p>
+            <p style="color:var(--text-muted);font-size:13px">Redirecting to your dashboard...</p>
+
+            <div style="background:var(--bg-elevated);border-radius:4px;height:4px;overflow:hidden;margin-top:28px">
+                <div style="height:100%;background:var(--accent);border-radius:4px;animation:progressFill 2.5s linear forwards"></div>
+            </div>
+
+            @if (ViewBag.RedirectUrl != null)
+            {
+                <script>
+                    setTimeout(function () {
+                        window.location.href = '@ViewBag.RedirectUrl';
+                    }, @(ViewBag.RedirectDelay ?? 2500));
+                </script>
+            }
+        }
+        else
+        {
+            <div style="width:72px;height:72px;background:var(--red-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--red);margin:0 auto 24px">
+                <i class="fas fa-circle-xmark"></i>
+            </div>
+
+            <h3 style="font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--red);margin-bottom:10px">Connection Failed</h3>
+            <p style="color:var(--text-secondary);margin-bottom:28px">@Model.Message</p>
+
+            <div style="display:flex;gap:10px;justify-content:center">
+                <a href="/Kite/Connect" class="btn btn-primary"><i class="fas fa-rotate-right"></i> Try Again</a>
+                <a href="/Dashboard" class="btn btn-ghost"><i class="fas fa-gauge-high"></i> Dashboard</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+<style>
+@@keyframes progressFill {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+</style>
+}

@@ -1,0 +1,47 @@
+﻿using KiteConnect;
+using FinalSem2Project.Models;
+using Microsoft.Extensions.Options;
+using FinalSem2Project.Models;
+namespace FinalSem2Project.Services
+{
+    public interface IKiteService
+    {
+        string GetLoginUrl();
+        Task<KiteCallbackModel> GenerateSession(string requestToken);
+        Task<PortfolioViewModel> GetPortfolio(string accessToken);
+    }
+    public class KiteServices : IKiteService
+    {
+        private readonly ZerodhaSettings settings;
+
+        public KiteServices(IOptions<ZerodhaSettings> ZerodhaSetting)
+        {
+            settings = ZerodhaSetting.Value;
+        }
+
+        public string GetLoginUrl()
+        {
+            return $"https://kite.zerodha.com/connect/login?v=3&api_key={Uri.EscapeDataString(settings.ApiKey)}";
+        }
+
+        public Task<KiteCallbackModel> GenerateSession(string requestToken)
+        {
+            if (string.IsNullOrWhiteSpace(requestToken))
+            {
+                return Task.FromResult(new KiteCallbackModel { Success = false, Message = "No request token received" });
+            }
+
+            var kite = new Kite(settings.ApiKey, Debug: false);
+
+            User user = kite.GenerateSession(requestToken, settings.ApiSecret);
+
+
+        }
+
+        public Task<PortfolioViewModel> GetPortfolio(string accessToken)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+}

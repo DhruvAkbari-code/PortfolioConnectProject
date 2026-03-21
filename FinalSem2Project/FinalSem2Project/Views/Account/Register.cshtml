@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — KitePro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .password-strength {
+            height: 4px;
+            background: #2a2f3c;
+            margin-top: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+        .strength-weak { background: #e74c3c; width: 33.33%; }
+        .strength-medium { background: #f39c12; width: 66.66%; }
+        .strength-strong { background: #2ecc71; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-bg"></div>
+        <div class="auth-grid"></div>
+
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-icon"><i class="fas fa-chart-candlestick"></i></div>
+                <div class="auth-logo-name">Kite<em>Pro</em></div>
+            </div>
+
+            <h2 class="auth-title">Create account</h2>
+            <p class="auth-subtitle">Start tracking your portfolio today</p>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="toast-msg toast-error" style="margin-bottom:20px">
+                    <i class="fas fa-triangle-exclamation"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <form method="post" action="/Account/Register">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="fullName" class="form-input" placeholder="Your full name" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
+                    <small style="color: var(--text-muted); font-size:12px; margin-top:5px; display:block">This will be your login email</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-input" placeholder="Create a password (min. 6 characters)" required minlength="6" onkeyup="checkPasswordStrength(this.value)" />
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="strengthBar"></div>
+                    </div>
+                    <small style="color: var(--text-muted); font-size:12px; margin-top:5px; display:block">
+                        Use at least 6 characters with a mix of letters, numbers & symbols
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <p class="auth-divider">
+                Already have an account? <a href="/Account/Login" class="auth-link">Sign in</a>
+            </p>
+
+            <div style="text-align:center; margin-top:20px; font-size:12px; color:var(--text-muted)">
+                By registering, you agree to our <a href="#" class="auth-link">Terms</a> and <a href="#" class="auth-link">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPasswordStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            bar.className = 'password-strength-bar';
+            
+            if (password.length === 0) {
+                bar.style.width = '0';
+                return;
+            }
+            
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 1;
+            else if (password.length >= 6) strength += 0.5;
+            if (/\d/.test(password)) strength += 0.5;
+            if (/[a-z]/.test(password)) strength += 0.5;
+            if (/[A-Z]/.test(password)) strength += 0.5;
+            if (/[^a-zA-Z0-9]/.test(password)) strength += 0.5;
+            if (strength < 1.5) {
+                bar.classList.add('strength-weak');
+            } else if (strength < 2.5) {
+                bar.classList.add('strength-medium');
+            } else {
+                bar.classList.add('strength-strong');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Kite Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @if (Context.Session.GetString("UserEmail") != null)
+    {
+        <div class="app-shell">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-logo">
+                    <div class="logo-mark">
+                        <span class="logo-text">Kite<em>Pro</em></span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="/Dashboard" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-gauge-high"></i></span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                    <a href="/Wishlist" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Wishlist" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-heart"></i></span>
+                        <span class="nav-label">Wishlist</span>
+                    </a>
+                    <a href="/Trending" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Trending" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-fire"></i></span>
+                        <span class="nav-label">Trending</span>
+                    </a>
+                    <a href="/Targets" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Targets" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-bullseye"></i></span>
+                        <span class="nav-label">Targets</span>
+                    </a>
+                    <a href="/Profile" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Profile" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-user"></i></span>
+                        <span class="nav-label">Profile</span>
+                    </a>
+                    <a href="/Kite/Connect" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Kite" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-plug"></i></span>
+                        <span class="nav-label">Kite Connect</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <a href="/Account/Logout" class="nav-item logout-item">
+                        <span class="nav-icon"><i class="fas fa-right-from-bracket"></i></span>
+                        <span class="nav-label">Logout</span>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="topbar">
+                    <div class="topbar-left">
+                        <h1 class="page-title">@ViewData["Title"]</h1>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="market-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Market Open</span>
+                        </div>
+                        <div class="topbar-time" id="topbarTime"></div>
+                    </div>
+                </div>
+
+                <div class="content-area">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="toast-msg toast-success"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="toast-msg toast-error"><i class="fas fa-triangle-exclamation"></i> @TempData["ErrorMessage"]</div>
+                    }
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+
+    <script>
+            function updateTime() {
+                const el = document.getElementById('topbarTime');
+                if (el) {
+                    el.textContent = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            // Auto-dismiss toasts
+            setTimeout(() => {
+                document.querySelectorAll('.toast-msg').forEach(t => t.classList.add('fade-out'));
+            }, 4000);
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

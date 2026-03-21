@@ -1,0 +1,129 @@
+﻿@model FinalSem2Project.Models.PortfolioViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+    <div class="stat-card blue">
+        <div class="stat-label">Total Investment</div>
+        <div class="stat-value">₹@((Model?.TotalInvestment ?? 0).ToString("N0"))</div>
+        <div class="stat-badge up"><i class="fas fa-wallet"></i> Portfolio Cost</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-label">Current Value</div>
+        <div class="stat-value">₹@((Model?.TotalValue ?? 0).ToString("N0"))</div>
+        <div class="stat-badge up"><i class="fas fa-arrow-trend-up"></i> Live Value</div>
+    </div>
+    <div class="stat-card @(Model?.TotalProfitLoss >= 0 ? "green" : "red")">
+        <div class="stat-label">Total P&L</div>
+        <div class="stat-value @(Model?.TotalProfitLoss >= 0 ? "positive" : "negative")">
+            @((Model?.TotalProfitLoss ?? 0) >= 0 ? "+" : "")₹@(Math.Abs(Model?.TotalProfitLoss ?? 0).ToString("N0"))
+        </div>
+        <div class="stat-badge @(Model?.TotalProfitLoss >= 0 ? "up" : "down")">
+            <i class="fas fa-@(Model?.TotalProfitLoss >= 0 ? "arrow-up" : "arrow-down")"></i> Unrealised P&L
+        </div>
+    </div>
+    <div class="stat-card @(Model?.TotalPnlPercentage >= 0 ? "green" : "red")">
+        <div class="stat-label">Returns</div>
+        <div class="stat-value @(Model?.TotalPnlPercentage >= 0 ? "positive" : "negative")">
+            @((Model?.TotalPnlPercentage ?? 0) >= 0 ? "+" : "")@((Model?.TotalPnlPercentage ?? 0).ToString("N2"))%
+        </div>
+        <div class="stat-badge @(Model?.TotalPnlPercentage >= 0 ? "up" : "down")">
+            <i class="fas fa-percent"></i> XIRR
+        </div>
+    </div>
+</div>
+
+<!-- Holdings Table -->
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">
+            <i class="fas fa-briefcase" style="color:var(--accent);margin-right:8px"></i>
+            Holdings @(Model?.Holdings?.Count > 0 ? $"({Model.Holdings.Count})" : "")
+        </span>
+        <div style="display:flex;gap:10px;align-items:center">
+            @if (Context.Session.GetString("AccessToken") != null)
+            {
+                <span class="badge badge-green"><i class="fas fa-circle" style="font-size:7px"></i> Kite Connected</span>
+            }
+            else
+            {
+                <a href="/Kite/Connect" class="badge badge-amber" style="cursor:pointer"><i class="fas fa-plug"></i> Connect Kite</a>
+            }
+            <a href="/Portfolio/Refresh" class="btn btn-ghost btn-sm"><i class="fas fa-rotate-right"></i> Refresh</a>
+        </div>
+    </div>
+
+    @if (Model?.Holdings != null && Model.Holdings.Any())
+    {
+        <div style="overflow-x:auto">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Exchange</th>
+                        <th>Qty</th>
+                        <th>Avg Price</th>
+                        <th>LTP</th>
+                        <th>Invested</th>
+                        <th>Curr. Value</th>
+                        <th>P&L</th>
+                        <th>P&L %</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var h in Model.Holdings)
+                    {
+                        var profit = ((decimal)h.LastPrice - (decimal)h.AveragePrice) * h.Quantity;
+                        var pct = h.AveragePrice > 0 ? ((h.LastPrice - h.AveragePrice) / h.AveragePrice) * 100 : 0;
+                        var initials = h.TradingSymbol?.Length >= 2 ? h.TradingSymbol[..2] : h.TradingSymbol ?? "—";
+                        <tr>
+                            <td>
+                                <div class="symbol-cell">
+                                    <div class="symbol-icon">@initials</div>
+                                    <div class="symbol-name">@h.TradingSymbol</div>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-blue">@(h.Exchange ?? "NSE")</span></td>
+                            <td class="text-primary-val">@h.Quantity</td>
+                            <td class="text-primary-val">₹@h.AveragePrice.ToString("N2")</td>
+                            <td class="text-primary-val">₹@h.LastPrice.ToString("N2")</td>
+                            <td>₹@(((decimal)h.AveragePrice * h.Quantity).ToString("N0"))</td>
+                            <td>₹@(((decimal)h.LastPrice * h.Quantity).ToString("N0"))</td>
+                            <td class="@(profit >= 0 ? "badge-up" : "badge-down")">
+                                @(profit >= 0 ? "+" : "")₹@profit.ToString("N2")
+                            </td>
+                            <td>
+                                <span class="badge @(pct >= 0 ? "badge-green" : "badge-red")">
+                                    @(pct >= 0 ? "▲" : "▼") @Math.Abs(pct).ToString("N2")%
+                                </span>
+                            </td>
+                            <td>
+                                <form method="post" action="/Wishlist/Add" style="display:inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="symbol" value="@h.TradingSymbol" />
+                                    <input type="hidden" name="exchange" value="@(h.Exchange ?? "NSE")" />
+                                    <input type="hidden" name="lastPrice" value="@h.LastPrice" />
+                                    <button type="submit" class="btn btn-ghost btn-sm" title="Add to Wishlist">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-chart-pie"></i>
+            <h4>No holdings data</h4>
+            <p>Connect your Zerodha account to see your portfolio holdings here.</p>
+            <a href="/Kite/Connect" class="btn btn-primary"><i class="fas fa-plug"></i> Connect Zerodha</a>
+        </div>
+    }
+</div>

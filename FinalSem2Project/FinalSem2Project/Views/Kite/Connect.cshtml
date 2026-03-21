@@ -1,0 +1,100 @@
+﻿@model FinalSem2Project.Models.KiteLoginModel
+@{
+    ViewData["Title"] = "Kite Connect";
+}
+
+<div style="max-width:560px">
+
+    @if (Model.IsConnected)
+    {
+        <!-- Connected State -->
+        <div class="card" style="margin-bottom:20px;border-color:rgba(110,231,183,0.25)">
+            <div style="display:flex;align-items:center;gap:18px">
+                <div style="width:52px;height:52px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--accent);flex-shrink:0">
+                    <i class="fas fa-circle-check"></i>
+                </div>
+                <div>
+                    <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--accent)">Zerodha Connected</div>
+                    <div style="color:var(--text-secondary);font-size:13px;margin-top:2px">Your Kite account is linked. Portfolio data is syncing.</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="/Dashboard" class="btn btn-primary" style="justify-content:center;padding:13px">
+                <i class="fas fa-gauge-high"></i> Go to Dashboard
+            </a>
+            <a href="/Portfolio/Refresh" class="btn btn-ghost" style="justify-content:center">
+                <i class="fas fa-rotate-right"></i> Refresh Portfolio Data
+            </a>
+
+            <form asp-action="Disconnect" asp-controller="Kite" method="post" style="margin-top:8px">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger" style="width:100%;justify-content:center">
+                    <i class="fas fa-plug-circle-xmark"></i> Disconnect Zerodha
+                </button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <!-- Not Connected -->
+        <div class="card" style="margin-bottom:20px">
+            <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px">
+                <div style="width:52px;height:52px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-muted);flex-shrink:0">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <div>
+                    <div style="font-family:var(--font-head);font-size:16px;font-weight:700">Connect Zerodha</div>
+                    <div style="color:var(--text-secondary);font-size:13px;margin-top:2px">Link your Kite account to import portfolio holdings.</div>
+                </div>
+            </div>
+
+            <!-- How it works -->
+            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;margin-bottom:22px">
+                <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:14px">How it works</div>
+                @foreach (var (step, label) in new[] {
+                    ("1", "Click the button below"),
+                    ("2", "Login to your Zerodha account"),
+                    ("3", "Grant read-only portfolio access"),
+                    ("4", "Holdings import automatically")
+                })
+                {
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:@(step == "4" ? "0" : "10px")">
+                        <div style="width:22px;height:22px;background:var(--accent-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">@step</div>
+                        <span style="color:var(--text-secondary);font-size:13px">@label</span>
+                    </div>
+                }
+            </div>
+
+            <a href="@Model.LoginUrl" class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:14px">
+                <i class="fas fa-plug"></i> Connect Zerodha Account
+            </a>
+        </div>
+
+        <!-- Security note -->
+        <div class="card" style="border-color:rgba(96,165,250,0.15)">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+                <i class="fas fa-shield-halved" style="color:#60a5fa;font-size:18px;margin-top:2px;flex-shrink:0"></i>
+                <div>
+                    <div style="font-weight:600;font-size:13px;color:var(--text-primary);margin-bottom:6px">Secure OAuth 2.0 Authentication</div>
+                    <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+                        Your Zerodha credentials are <strong style="color:var(--text-primary)">never stored</strong> by us.
+                        We use official Kite Connect API with <strong style="color:var(--text-primary)">read-only access</strong> —
+                        no trading permissions are requested.
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('autoConnect') && !@Json.Serialize(Model.IsConnected)) {
+            window.location.href = '@Model.LoginUrl';
+        }
+    </script>
+}

@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — KitePro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-bg"></div>
+        <div class="auth-grid"></div>
+
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-icon"><i class="fas fa-chart-candlestick"></i></div>
+                <div class="auth-logo-name">Kite<em>Pro</em></div>
+            </div>
+
+            <h2 class="auth-title">Welcome back</h2>
+            <p class="auth-subtitle">Sign in to your portfolio dashboard</p>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="toast-msg toast-error" style="margin-bottom:20px">
+                    <i class="fas fa-triangle-exclamation"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <form method="post" action="/Account/Login">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div style="position:relative">
+                        <input type="password" name="password" id="pwdInput" class="form-input" placeholder="Enter password" required autocomplete="current-password" style="padding-right:40px" />
+                        <button type="button" onclick="togglePwd()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:13px">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="text-align:right; margin-bottom:20px">
+                    <a href="/Account/ForgotPassword" class="auth-link" style="font-size:14px">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px">
+                    <i class="fas fa-right-to-bracket"></i> Sign In
+                </button>
+            </form>
+
+            <p class="auth-divider">
+                Don't have an account? <a href="/Account/Register" class="auth-link">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+            function togglePwd() {
+                const i = document.getElementById('pwdInput');
+                const icon = document.getElementById('eyeIcon');
+                if (i.type === 'password') {
+                    i.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    i.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            }
+    </script>
+</body>
+</html>
