@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Y5YTYMVEAtI=",
+  "dgSpecHash": "HbXbMy6nO0M=",
   "success": true,
-  "projectFilePath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
+  "projectFilePath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\addhr\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

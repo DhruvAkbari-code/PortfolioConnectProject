@@ -50,9 +50,7 @@
             else
             {
                 <a href="/Kite/Connect" class="badge badge-amber" style="cursor:pointer"><i class="fas fa-plug"></i> Connect Kite</a>
-            }
-            <a href="/Portfolio/Refresh" class="btn btn-ghost btn-sm"><i class="fas fa-rotate-right"></i> Refresh</a>
-        </div>
+            }</div>
     </div>
 
     @if (Model?.Holdings != null && Model.Holdings.Any())
@@ -99,17 +97,6 @@
                                 <span class="badge @(pct >= 0 ? "badge-green" : "badge-red")">
                                     @(pct >= 0 ? "▲" : "▼") @Math.Abs(pct).ToString("N2")%
                                 </span>
-                            </td>
-                            <td>
-                                <form method="post" action="/Wishlist/Add" style="display:inline">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="symbol" value="@h.TradingSymbol" />
-                                    <input type="hidden" name="exchange" value="@(h.Exchange ?? "NSE")" />
-                                    <input type="hidden" name="lastPrice" value="@h.LastPrice" />
-                                    <button type="submit" class="btn btn-ghost btn-sm" title="Add to Wishlist">
-                                        <i class="fas fa-heart"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     }

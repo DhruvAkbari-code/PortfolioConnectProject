@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj": {}
+    "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj": {}
   },
   "projects": {
-    "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj": {
+    "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
+        "projectUniqueName": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
         "projectName": "FinalSem2Project",
-        "projectPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
+        "projectPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
         "packagesPath": "C:\\Users\\addhr\\.nuget\\packages\\",
-        "outputPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\obj\\",
+        "outputPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

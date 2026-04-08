@@ -1,0 +1,162 @@
+﻿@* Purpose: Renders the watchlist table with live NSE prices from ViewBag *@
+
+@model List<FinalSem2Project.Models.Watchlist>
+@{
+    ViewData["Title"] = "Watchlist";
+    var livePrices = ViewBag.LivePrices as Dictionary<string, decimal?>;
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom:16px;padding:12px 16px;
+        background:rgba(0,160,90,0.1);border:1px solid rgba(0,160,90,0.3);
+        border-radius:8px;color:var(--green);font-size:13px">
+        <i class="fas fa-circle-check"></i> @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" style="margin-bottom:16px;padding:12px 16px;
+        background:rgba(200,40,40,0.08);border:1px solid rgba(200,40,40,0.25);
+        border-radius:8px;color:var(--red);font-size:13px">
+        <i class="fas fa-circle-exclamation"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+    <p style="color:var(--text-secondary);font-size:13px">Live NSE prices update each time you load the page.</p>
+    <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+        <i class="fas fa-plus"></i> Add Stock
+    </button>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">
+            <i class="fas fa-heart" style="color:var(--red);margin-right:8px"></i>
+            Watchlist (@(Model?.Count ?? 0))
+        </span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Exchange</th>
+                    <th>Price When Added</th>
+                    <th>Live Price</th>
+                    <th>Change</th>
+                    <th>Added On</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var live = livePrices != null && livePrices.ContainsKey(item.StockSymbol)
+                                ? livePrices[item.StockSymbol] : null;
+
+                    var change = (live.HasValue && item.PriceAtAdd.HasValue)
+                                  ? live.Value - item.PriceAtAdd.Value : (decimal?)null;
+
+                    var changeColor = change.HasValue ? (change > 0 ? "var(--green)" : "var(--red)") : "inherit";
+
+                    <tr>
+                        <td>
+                            <div class="symbol-cell">
+                                <div class="symbol-icon">@(item.StockSymbol.Length >= 2 ? item.StockSymbol[..2] : item.StockSymbol)</div>
+                                <div class="symbol-name">@item.StockSymbol</div>
+                            </div>
+                        </td>
+                        <td>@item.StockName</td>
+                        <td><span class="badge badge-blue">@item.Exchange</span></td>
+                        <td>@(item.PriceAtAdd.HasValue ? $"₹{item.PriceAtAdd:N2}" : "—")</td>
+
+                        @* Live price — shows "Market Closed" if null *@
+                        <td class="text-primary-val">
+                            @(live.HasValue ? $"₹{live:N2}" : "Market Closed")
+                        </td>
+
+                        <td style="color:@changeColor;font-weight:600">
+                            @if (change.HasValue)
+                            {
+                                <span>@(change > 0 ? "▲" : "▼") ₹@(Math.Abs(change.Value).ToString("N2"))</span>
+                            }
+                            else
+                            {
+
+                                <span>—</span>
+                            }
+                        </td>
+
+                        <td style="color:var(--text-secondary)">@item.AddedAt.ToString("dd MMM yyyy")</td>
+                        <td>
+                            <form method="post" action="/Watchlist/Remove" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-heart-crack"></i>
+            <h4>Your watchlist is empty</h4>
+            <p>Add stocks to track their live NSE prices.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+                <i class="fas fa-plus"></i> Add First Stock
+            </button>
+        </div>
+    }
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal-box">
+        <div class="modal-title"><i class="fas fa-heart" style="color:var(--red);margin-right:8px"></i>Add to Watchlist</div>
+        <p class="modal-subtitle">Live price will be fetched from NSE automatically</p>
+
+        <form method="post" action="/Watchlist/Add">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label class="form-label">Stock Symbol</label>
+                <input type="text" name="stockSymbol" class="form-input" placeholder="e.g. RELIANCE, TCS, INFY"
+                       required style="text-transform:uppercase" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Stock Name</label>
+                <input type="text" name="stockName" class="form-input" placeholder="e.g. Reliance Industries Ltd" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Exchange</label>
+                <select name="exchange" class="form-input">
+                    <option value="NSE">NSE</option>
+                    <option value="BSE">BSE</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost"
+                        onclick="document.getElementById('addModal').classList.remove('open')">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-heart"></i> Add to Watchlist</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Close modal on backdrop click
+    document.getElementById('addModal').addEventListener('click', function (e) {
+        if (e.target === this) this.classList.remove('open');
+    });
+</script>

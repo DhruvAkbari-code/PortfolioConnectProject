@@ -1,18 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\",
+  "WorkspaceRootPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\finalsem2project\\finalsem2project\\controllers\\kitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\kitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\finalsem2project\\finalsem2project\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\finalsem2project\\finalsem2project\\services\\kiteservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A34A7B19-1288-4D50-A480-A2D5A2080FC4}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\services\\kiteservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\controllers\\watchlistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\watchlistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,40 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "KiteController.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Controllers\\KiteController.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\KiteController.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Controllers\\KiteController.cs",
-              "RelativeToolTip": "FinalSem2Project\\Controllers\\KiteController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAswCgAAABWAAAAAAAAAA==",
+              "Title": "WatchlistController.cs",
+              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\WatchlistController.cs",
+              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\WatchlistController.cs",
+              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\WatchlistController.cs",
+              "RelativeToolTip": "FinalSem2Project\\Controllers\\WatchlistController.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAuwDUAAABLAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-20T20:19:47.463Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "KiteServices.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Services\\KiteServices.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Services\\KiteServices.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Services\\KiteServices.cs",
-              "RelativeToolTip": "FinalSem2Project\\Services\\KiteServices.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAuwCwAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-20T20:16:34.599Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DashboardController.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Controllers\\DashboardController.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\DashboardController.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\FinalSem2Project\\FinalSem2Project\\Controllers\\DashboardController.cs",
-              "RelativeToolTip": "FinalSem2Project\\Controllers\\DashboardController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-20T20:15:51.471Z",
+              "WhenOpened": "2026-03-26T17:59:54.539Z",
               "EditorCaption": ""
             }
           ]

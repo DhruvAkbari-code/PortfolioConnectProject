@@ -14,7 +14,7 @@ namespace FinalSem2Project.Controllers
 
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetInt32("UserId") != null)
+            if (HttpContext.Session.GetInt32("UserEmail") != null)
                 return RedirectToAction("Index", "Dashboard");
 
             return View();

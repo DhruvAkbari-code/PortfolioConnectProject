@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Trending";
+}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+    <p style="color:var(--text-secondary);font-size:13px">
+        Today's top movers on NSE &mdash; auto-refreshes every 30 seconds.
+    </p>
+    <div style="display:flex;align-items:center;gap:12px">
+        <span id="lastUpdated" style="font-size:12px;color:var(--text-secondary)"></span>
+        <button class="btn btn-ghost btn-sm" onclick="loadData()">
+            <i class="fas fa-rotate-right"></i> Refresh Now
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">
+            <i class="fas fa-fire" style="color:#e25c1a;margin-right:8px"></i>
+            Trending on NSE
+            <span id="stockCount" style="color:var(--text-secondary);font-weight:400;font-size:13px;margin-left:4px"></span>
+        </span>
+        <span id="statusBadge"></span>
+    </div>
+
+    <div id="loadingState" style="padding:52px;text-align:center;color:var(--text-secondary)">
+        <i class="fas fa-circle-notch fa-spin" style="font-size:22px;display:block;margin-bottom:12px"></i>
+        <p style="font-size:13px">Fetching today's top movers from NSE...</p>
+    </div>
+
+    <div id="errorState" style="display:none" class="empty-state">
+        <i class="fas fa-triangle-exclamation"></i>
+        <h4>Could not load data</h4>
+        <p id="errorMsg">NSE may be unreachable.</p>
+        <button class="btn btn-primary" onclick="loadData()">
+            <i class="fas fa-rotate-right"></i> Retry
+        </button>
+    </div>
+
+    <div id="tableWrapper" style="display:none;overflow-x:auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Symbol</th>
+                    <th>Company</th>
+                    <th>Live Price</th>
+                    <th>Day Change</th>
+                    <th>Change %</th>
+                    <th>Volume</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="stockTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<form style="display:none">@Html.AntiForgeryToken()</form>
+
+@section Scripts {
+    <script>
+        let refreshTimer;
+
+        async function loadData() {
+            clearTimeout(refreshTimer);
+
+            document.getElementById('statusBadge').innerHTML =
+                '<span style="font-size:12px;color:var(--text-secondary)">' +
+                '<i class="fas fa-circle-notch fa-spin"></i> Updating...</span>';
+
+            try {
+                const res = await fetch('/Trending/LiveData');
+                if (!res.ok) throw new Error('Server returned ' + res.status);
+
+                const stocks = await res.json();
+
+                if (!stocks || stocks.length === 0) {
+                    showError('No data returned. NSE market may be closed right now.');
+                    return;
+                }
+
+                renderTable(stocks);
+
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('errorState').style.display   = 'none';
+                document.getElementById('tableWrapper').style.display = 'block';
+                document.getElementById('stockCount').textContent     = '(' + stocks.length + ')';
+                document.getElementById('lastUpdated').textContent    =
+                    'Updated at ' + new Date().toLocaleTimeString('en-IN', {
+                        hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    });
+
+            } catch (err) {
+                showError('Error: ' + err.message);
+            }
+
+            refreshTimer = setTimeout(loadData, 30000);
+        }
+
+        function showError(msg) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('tableWrapper').style.display = 'none';
+            document.getElementById('errorState').style.display   = 'block';
+            document.getElementById('errorMsg').textContent       = msg;
+            document.getElementById('statusBadge').innerHTML      = '';
+        }
+
+        function renderTable(stocks) {
+            const tbody    = document.getElementById('stockTableBody');
+            const isUpdate = tbody.children.length > 0;
+            const token    = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? '';
+            const isEod    = stocks.some(s => s.isEod);
+
+            document.getElementById('statusBadge').innerHTML = isEod
+                ? '<span style="font-size:12px;color:#BA7517;background:rgba(186,117,23,0.1);padding:3px 10px;border-radius:20px">' +
+                  '<i class="fas fa-clock" style="font-size:10px;margin-right:4px"></i>Last session data</span>'
+                : '<span style="font-size:12px;color:var(--green)">' +
+                  '<i class="fas fa-circle" style="font-size:8px;margin-right:4px"></i>Live</span>';
+
+            tbody.innerHTML = stocks.map((s, i) => {
+                const up      = s.dayChange >= 0;
+                const arrow   = up ? '▲' : '▼';
+                const color   = up ? 'var(--green)' : 'var(--red)';
+                const pillBg  = up ? 'rgba(0,160,90,0.12)' : 'rgba(200,40,40,0.10)';
+                const initials = s.symbol.substring(0, 2).toUpperCase();
+
+                const vol = s.volume >= 1000000
+                    ? (s.volume / 1000000).toFixed(2) + ' M'
+                    : s.volume >= 1000
+                    ? (s.volume / 1000).toFixed(1) + ' K'
+                    : s.volume.toLocaleString('en-IN');
+
+                const price = '₹' + s.lastPrice.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                });
+
+                return '<tr ' + (isUpdate ? 'style="animation:rowFade 0.5s ease"' : '') + '>' +
+                    '<td style="color:var(--text-secondary);font-size:12px">' + (i + 1) + '</td>' +
+                    '<td><div class="symbol-cell">' +
+                        '<div class="symbol-icon">' + initials + '</div>' +
+                        '<div class="symbol-name">' + s.symbol + '</div>' +
+                    '</div></td>' +
+                    '<td style="color:var(--text-secondary);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + s.name + '">' + (s.name || '—') + '</td>' +
+                    '<td style="font-weight:600">' + price + '</td>' +
+                    '<td style="color:' + color + ';font-weight:500">' + arrow + ' ₹' + Math.abs(s.dayChange).toFixed(2) + '</td>' +
+                    '<td><span style="background:' + pillBg + ';color:' + color + ';padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">' + arrow + ' ' + Math.abs(s.pctChange).toFixed(2) + '%</span></td>' +
+                    '<td style="color:var(--text-secondary);font-size:12px">' + vol + '</td>' +
+                    '<td>' +
+                        '<form method="post" action="/Watchlist/AddFromTrending" style="display:inline">' +
+                            '<input type="hidden" name="__RequestVerificationToken" value="' + token + '" />' +
+                            '<input type="hidden" name="stockSymbol" value="' + s.symbol + '" />' +
+                            '<input type="hidden" name="stockName" value="' + s.name + '" />' +
+                            '<input type="hidden" name="exchange" value="NSE" />' +
+                            '<button type="submit" class="btn btn-ghost btn-sm" title="Add to Watchlist">' +
+                                '<i class="fas fa-heart"></i>' +
+                            '</button>' +
+                        '</form>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        const style = document.createElement('style');
+        document.head.appendChild(style);
+
+        loadData();
+    </script>
+}
