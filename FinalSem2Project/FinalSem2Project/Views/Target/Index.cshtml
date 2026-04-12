@@ -1,0 +1,326 @@
+﻿@model List<FinalSem2Project.Models.StockTarget>
+@{
+    ViewData["Title"] = "Targets";
+    var livePrices = ViewBag.LivePrices as Dictionary<string, decimal?>;
+    
+    // Helper function to convert database target type to display text
+    string GetDisplayTargetType(string targetType)
+    {
+        return targetType switch
+        {
+            "price_rise" => "▲ Above",
+            "price_fall" => "▼ Below",
+            "percent_change" => "⟳ Percent Change",
+            _ => targetType
+        };
+    }
+    
+    string GetTargetTypeColor(string targetType)
+    {
+        return targetType switch
+        {
+            "price_rise" => "var(--green)",
+            "price_fall" => "var(--red)",
+            _ => "var(--text-secondary)"
+        };
+    }
+    
+    string GetTargetTypeBg(string targetType)
+    {
+        return targetType switch
+        {
+            "price_rise" => "rgba(0,160,90,0.1)",
+            "price_fall" => "rgba(200,40,40,0.08)",
+            _ => "rgba(100,100,100,0.08)"
+        };
+    }
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="margin-bottom:16px;padding:12px 16px;background:rgba(0,160,90,0.1);
+        border:1px solid rgba(0,160,90,0.3);border-radius:8px;
+        color:var(--green);font-size:13px">
+        <i class="fas fa-circle-check"></i> @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div style="margin-bottom:16px;padding:12px 16px;background:rgba(200,40,40,0.08);
+        border:1px solid rgba(200,40,40,0.25);border-radius:8px;
+        color:var(--red);font-size:13px">
+        <i class="fas fa-circle-exclamation"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+    <p style="color:var(--text-secondary);font-size:13px">
+        Get alerted when a stock crosses your target price.
+    </p>
+    <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+        <i class="fas fa-plus"></i> Set Target
+    </button>
+</div>
+
+@* ── Summary Cards ── *@
+@{
+    var total = Model?.Count ?? 0;
+    var active = Model?.Count(t => t.IsActive && !t.IsTriggered) ?? 0;
+    var triggered = Model?.Count(t => t.IsTriggered) ?? 0;
+    var inactive = Model?.Count(t => !t.IsActive) ?? 0;
+}
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+    <div style="background:var(--card-bg, var(--bg-secondary));border-radius:10px;padding:16px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Total Targets</div>
+        <div style="font-size:24px;font-weight:500">@total</div>
+    </div>
+    <div style="background:var(--card-bg, var(--bg-secondary));border-radius:10px;padding:16px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Active</div>
+        <div style="font-size:24px;font-weight:500;color:var(--green)">@active</div>
+    </div>
+    <div style="background:var(--card-bg, var(--bg-secondary));border-radius:10px;padding:16px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Triggered</div>
+        <div style="font-size:24px;font-weight:500;color:#e25c1a">@triggered</div>
+    </div>
+    <div style="background:var(--card-bg, var(--bg-secondary));border-radius:10px;padding:16px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Paused</div>
+        <div style="font-size:24px;font-weight:500;color:var(--text-secondary)">@inactive</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">
+            <i class="fas fa-bullseye" style="color:#e25c1a;margin-right:8px"></i>
+            My Targets (@total)
+        </span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Exchange</th>
+                    <th>Condition</th>
+                    <th>Target Price</th>
+                    <th>Price at Creation</th>
+                    <th>Live Price</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    var live = livePrices != null && livePrices.ContainsKey(t.StockSymbol)
+                               ? livePrices[t.StockSymbol] : null;
+
+                    // Progress: how close is current price to target
+                    decimal? progress = null;
+                    if (live.HasValue && t.PriceAtCreation > 0)
+                    {
+                        var total2 = Math.Abs(t.ConditionValue - t.PriceAtCreation);
+                        var done = Math.Abs(live.Value - t.PriceAtCreation);
+                        progress = total2 > 0 ? Math.Min(done / total2 * 100, 100) : 100;
+                    }
+
+                    var statusColor = t.IsTriggered ? "#e25c1a"
+                                    : t.IsActive ? "var(--green)"
+                                    : "var(--text-secondary)";
+
+                    var statusText = t.IsTriggered ? "Triggered"
+                                    : t.IsActive ? "Active"
+                                    : "Paused";
+
+                    var statusIcon = t.IsTriggered ? "fa-bell"
+                                    : t.IsActive ? "fa-circle-dot"
+                                    : "fa-pause";
+
+                    var initials = t.StockSymbol.Length >= 2 ? t.StockSymbol[..2] : t.StockSymbol;
+
+                    <tr>
+                        <td>
+                            <div class="symbol-cell">
+                                <div class="symbol-icon">@initials</div>
+                                <div>
+                                    <div class="symbol-name">@t.StockSymbol</div>
+                                    <div style="font-size:11px;color:var(--text-secondary)">@t.StockName</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td><span class="badge badge-blue">@t.Exchange</span></td>
+
+                        <td>
+                            <span style="font-size:12px;padding:3px 10px;border-radius:20px;font-weight:500;
+                                background:@GetTargetTypeBg(t.TargetType);
+                                color:@GetTargetTypeColor(t.TargetType)">
+                                @GetDisplayTargetType(t.TargetType)
+                            </span>
+                        </td>
+
+                        <td style="font-weight:600">₹@t.ConditionValue.ToString("N2")</td>
+
+                        <td style="color:var(--text-secondary)">₹@t.PriceAtCreation.ToString("N2")</td>
+
+                        <td style="font-weight:500">
+                            @(live.HasValue ? $"₹{live.Value:N2}" : "—")
+                        </td>
+
+                        <td style="min-width:100px">
+                            @if (progress.HasValue)
+                            {
+                                var pct = (int)progress.Value;
+                                var barColor = t.IsTriggered ? "#e25c1a"
+                                             : t.TargetType == "price_rise" ? "var(--green)" : "var(--red)";
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <div style="flex:1;height:6px;background:var(--border-color, #eee);border-radius:3px;overflow:hidden">
+                                        <div style="width:@(pct)%;height:100%;background:@barColor;border-radius:3px;
+                                        transition:width 0.3s ease"></div>
+                                    </div>
+                                    <span style="font-size:11px;color:var(--text-secondary);min-width:28px">@pct%</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <span style="color:var(--text-secondary);font-size:12px">—</span>
+                            }
+                        </td>
+
+                        <td>
+                            <span style="font-size:12px;color:@statusColor;font-weight:500">
+                                <i class="fas @statusIcon" style="font-size:10px;margin-right:4px"></i>@statusText
+                            </span>
+                            @if (t.IsTriggered && t.TriggeredAt.HasValue)
+                            {
+                                <div style="font-size:11px;color:var(--text-secondary)">
+                                    @t.TriggeredAt.Value.ToString("dd MMM, HH:mm")
+                                </div>
+                            }
+                        </td>
+
+                        <td style="color:var(--text-secondary);font-size:12px">
+                            @t.CreatedAt.ToString("dd MMM yyyy")
+                        </td>
+
+                        <td>
+                            <div style="display:flex;gap:6px">
+                                @if (!t.IsTriggered)
+                                {
+                                    <form method="post" action="/Target/ToggleActive" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@t.Id" />
+                                        <button type="submit"
+                                                class="btn btn-ghost btn-sm"
+                                                title="@(t.IsActive ? "Pause" : "Resume")">
+                                            <i class="fas @(t.IsActive ? "fa-pause" : "fa-play")"></i>
+                                        </button>
+                                    </form>
+                                }
+                                <form method="post" action="/Target/Delete" style="display:inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@t.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-bullseye"></i>
+            <h4>No targets set</h4>
+            <p>Set a price target to track when a stock crosses your desired price.</p>
+            <button class="btn btn-primary"
+                    onclick="document.getElementById('addModal').classList.add('open')">
+                <i class="fas fa-plus"></i> Set First Target
+            </button>
+        </div>
+    }
+</div>
+
+@* ── Add Target Modal ── *@
+<div class="modal-overlay" id="addModal">
+    <div class="modal-box">
+        <div class="modal-title">
+            <i class="fas fa-bullseye" style="color:#e25c1a;margin-right:8px"></i>Set Price Target
+        </div>
+        <p class="modal-subtitle">Get notified when a stock hits your price</p>
+
+        <form method="post" action="/Target/Add">
+            @Html.AntiForgeryToken()
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="form-group">
+                    <label class="form-label">Stock Symbol</label>
+                    <input type="text" name="stockSymbol" class="form-input"
+                           placeholder="e.g. RELIANCE" required
+                           style="text-transform:uppercase" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock Name</label>
+                    <input type="text" name="stockName" class="form-input"
+                           placeholder="e.g. Reliance Industries" />
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="form-group">
+                    <label class="form-label">Exchange</label>
+                    <select name="exchange" class="form-input">
+                        <option value="NSE">NSE</option>
+                        <option value="BSE">BSE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Condition</label>
+                    <select name="targetType" class="form-input" id="targetTypeSelect">
+                        <option value="above">▲ Price goes Above</option>
+                        <option value="below">▼ Price goes Below</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Target Price (₹)</label>
+                <input type="number" name="conditionValue" class="form-input"
+                       placeholder="0.00" step="0.01" min="0" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notify Email</label>
+                <input type="email" name="notifyEmail" class="form-input"
+                       placeholder="your@email.com"
+                       value="@Context.Session.GetString("UserEmail")" />
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost"
+                        onclick="document.getElementById('addModal').classList.remove('open')">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-bullseye"></i> Set Target
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('addModal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('open');
+        });
+    </script>
+}
