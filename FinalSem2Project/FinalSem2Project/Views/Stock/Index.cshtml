@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = ViewBag.Symbol + " — Stock Detail";
+    string symbol = ViewBag.Symbol;
+    string initials = symbol.Length >= 2 ? symbol.Substring(0, 2) : symbol;
+}
+
+<style>
+    .stat-card {
+        padding: 12px 16px;
+        background: var(--color-background-secondary, #f8f9fa);
+        border-radius: 8px;
+        border: 1px solid var(--color-border-tertiary, #e9ecef);
+    }
+    .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary, #6c757d);
+        margin-bottom: 6px;
+    }
+    .stat-value {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    @* Dark mode adjustments *@
+    @@media (prefers-color-scheme: dark) {
+        .stat-card { background: #1a1a1a; border-color: #2a2a2a; }
+        .stat-label { color: #8b949e; }
+    }
+</style>
+
+@* Top Bar *@
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+    <button onclick="history.back()" class="btn btn-ghost btn-sm">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+    
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #185FA5; color: white;
+            display: flex; align-items: center; justify-content: center; font-weight: 600;">
+            @initials
+        </div>
+        <div>
+            <div style="font-size: 18px; font-weight: 600;" id="companyName">@symbol</div>
+            <div style="font-size: 12px; color: #6c757d;" id="exchangeName">Loading...</div>
+        </div>
+    </div>
+
+    <div style="margin-left: auto; display: flex; gap: 8px;">
+        <button class="btn btn-ghost btn-sm" onclick="loadStockData()">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <form method="post" action="/Watchlist/Add" style="display: inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="stockSymbol" value="@symbol" />
+            <input type="hidden" name="stockName" id="wlName" value="@symbol" />
+            <input type="hidden" name="exchange" value="NSE" />
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Watchlist
+            </button>
+        </form>
+    </div>
+</div>
+
+@* Error Message *@
+<div id="errorMsg" style="display: none; background: #fee; color: #c00; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+    <i class="fas fa-exclamation-triangle"></i> <span id="errorText"></span>
+</div>
+
+@* Price Section *@
+<div class="stat-card" style="margin-bottom: 20px;">
+    <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;">
+        <span id="price" style="font-size: 36px; font-weight: 600;">—</span>
+        <span id="change" style="font-size: 16px; font-weight: 500;"></span>
+    </div>
+    <div id="updateTime" style="font-size: 11px; color: #6c757d; margin-top: 8px;"></div>
+</div>
+
+@* Price Details (4 columns) *@
+<div class="grid-4" style="margin-bottom: 20px;">
+    <div class="stat-card"><div class="stat-label">Day High</div><div class="stat-value" id="high">—</div></div>
+    <div class="stat-card"><div class="stat-label">Day Low</div><div class="stat-value" id="low">—</div></div>
+    <div class="stat-card"><div class="stat-label">Open</div><div class="stat-value" id="open">—</div></div>
+    <div class="stat-card"><div class="stat-label">Prev Close</div><div class="stat-value" id="prevClose">—</div></div>
+    <div class="stat-card"><div class="stat-label">Volume</div><div class="stat-value" id="volume">-</div></div>
+</div>
+
+@* 52 Week Range *@
+<div class="stat-card" style="margin-bottom: 20px;">
+    <div class="stat-label">52-Week Range</div>
+    <div style="display: flex; justify-content: space-between; margin: 12px 0 8px;">
+        <span id="week52Low" style="color: #dc3545;">—</span>
+        <span id="week52Position" style="font-size: 12px;">—</span>
+        <span id="week52High" style="color: #28a745;">—</span>
+    </div>
+    <div style="height: 6px; background: #e9ecef; border-radius: 3px; position: relative;">
+        <div id="rangeFill" style="height: 100%; border-radius: 3px; width: 0%; background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);"></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const SYMBOL = '@symbol';
+    const QUERY = SYMBOL + '.NS';
+    const PROXY = 'https://corsproxy.io/?';
+
+    function formatINR(num) {
+        if (!num || num === 0) return '—';
+        return '₹' + Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatVolume(num) {
+        if (!num) return '—';
+        if (num >= 1e7) return (num / 1e7).toFixed(2) + ' Cr';
+        if (num >= 1e5) return (num / 1e5).toFixed(2) + ' L';
+        if (num >= 1e3) return (num / 1e3).toFixed(1) + ' K';
+        return num.toLocaleString();
+    }
+
+    function formatLarge(num) {
+        if (!num) return '—';
+        if (num >= 1e12) return '₹' + (num / 1e12).toFixed(2) + ' T';
+        if (num >= 1e9) return '₹' + (num / 1e9).toFixed(2) + ' B';
+        if (num >= 1e7) return '₹' + (num / 1e7).toFixed(2) + ' Cr';
+        return '₹' + num.toLocaleString();
+    }
+
+    async function loadStockData() {
+        const errorDiv = document.getElementById('errorMsg');
+        errorDiv.style.display = 'none';
+
+        try {
+            // Single API call for all data
+            const url = PROXY + encodeURIComponent(
+                `https://query1.finance.yahoo.com/v8/finance/chart/${QUERY}`
+            );
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (!data.chart?.result?.[0]) {
+                throw new Error('No data received for this symbol');
+            }
+
+            const result = data.chart.result[0];
+            const meta = result.meta;
+            const quote = result.indicators.quote[0];
+            
+            // Get current price (use latest from quotes or regularMarketPrice)
+            const currentPrice = meta.regularMarketPrice || 
+                                 (quote.close && quote.close[quote.close.length - 1]) || 0;
+            const previousClose = meta.chartPreviousClose || meta.previousClose || 0;
+            const change = currentPrice - previousClose;
+            const changePercent = previousClose ? (change / previousClose * 100) : 0;
+            
+            // Update price display
+            document.getElementById('price').innerHTML = formatINR(currentPrice);
+            const changeHtml = change >= 0 
+                ? `<span style="color: #28a745;">▲ ₹${Math.abs(change).toFixed(2)} (${changePercent.toFixed(2)}%)</span>`
+                : `<span style="color: #dc3545;">▼ ₹${Math.abs(change).toFixed(2)} (${changePercent.toFixed(2)}%)</span>`;
+            document.getElementById('change').innerHTML = changeHtml;
+            document.getElementById('price').style.color = change >= 0 ? '#28a745' : '#dc3545';
+            
+            // Price details
+            document.getElementById('open').innerHTML = formatINR(meta.regularMarketOpen || quote.open?.[0]);
+            document.getElementById('high').innerHTML = formatINR(meta.regularMarketDayHigh || Math.max(...(quote.high || [0])));
+            document.getElementById('low').innerHTML = formatINR(meta.regularMarketDayLow || Math.min(...(quote.low || [0])));
+            document.getElementById('prevClose').innerHTML = formatINR(previousClose);
+            
+            // Volume
+            const volume = meta.regularMarketVolume || quote.volume?.[quote.volume.length - 1];
+            document.getElementById('volume').innerHTML = formatVolume(volume);
+            
+            // 52 Week Range
+            const week52High = meta.fiftyTwoWeekHigh || meta.regularMarketDayHigh;
+            const week52Low = meta.fiftyTwoWeekLow || meta.regularMarketDayLow;
+            if (week52High && week52Low && week52High !== week52Low) {
+                document.getElementById('week52Low').innerHTML = formatINR(week52Low);
+                document.getElementById('week52High').innerHTML = formatINR(week52High);
+                const position = ((currentPrice - week52Low) / (week52High - week52Low)) * 100;
+                document.getElementById('rangeFill').style.width = position + '%';
+                document.getElementById('week52Position').innerHTML = position.toFixed(1) + '% from low';
+            }
+            
+            // Company name and exchange
+            document.getElementById('companyName').innerHTML = meta.longName || meta.shortName || SYMBOL;
+            document.getElementById('exchangeName').innerHTML = meta.exchangeName || 'NSE';
+            document.getElementById('wlName').value = meta.longName || meta.shortName || SYMBOL;
+            document.getElementById('updateTime').innerHTML = 'Updated: ' + new Date().toLocaleTimeString();
+            
+        } catch (error) {
+            console.error('Error:', error);
+            errorDiv.style.display = 'block';
+            document.getElementById('errorText').innerHTML = error.message;
+            document.getElementById('companyName').innerHTML = SYMBOL;
+        }
+    }
+    
+    loadStockData();
+</script>
+}

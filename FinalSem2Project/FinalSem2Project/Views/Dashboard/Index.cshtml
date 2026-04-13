@@ -81,7 +81,13 @@
                             <td>
                                 <div class="symbol-cell">
                                     <div class="symbol-icon">@initials</div>
-                                    <div class="symbol-name">@h.TradingSymbol</div>
+                                    <div class="symbol-name">
+                                        <a href="/Stock/@h.TradingSymbol"
+                                               style="color:inherit;text-decoration:none;font-weight:500">
+                                            @h.TradingSymbol
+                                        </a>
+                                    </div>
+                                    
                                 </div>
                             </td>
                             <td><span class="badge badge-blue">@(h.Exchange ?? "NSE")</span></td>

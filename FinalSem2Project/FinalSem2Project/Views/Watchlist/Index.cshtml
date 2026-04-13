@@ -69,7 +69,10 @@
                         <td>
                             <div class="symbol-cell">
                                 <div class="symbol-icon">@(item.StockSymbol.Length >= 2 ? item.StockSymbol[..2] : item.StockSymbol)</div>
-                                <div class="symbol-name">@item.StockSymbol</div>
+                                <a href="/Stock/@item.StockSymbol"
+                                       style="color:inherit;text-decoration:none;font-weight:500">
+                                    @item.StockSymbol
+                                </a>
                             </div>
                         </td>
                         <td>@item.StockName</td>

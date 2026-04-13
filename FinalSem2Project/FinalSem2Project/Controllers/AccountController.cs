@@ -14,7 +14,7 @@ namespace FinalSem2Project.Controllers
 
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetInt32("UserEmail") != null)
+            if (HttpContext.Session.GetString("UserEmail") != null)
                 return RedirectToAction("Index", "Dashboard");
 
             return View();
@@ -63,7 +63,7 @@ namespace FinalSem2Project.Controllers
 
         public IActionResult Register()
         {
-            if(HttpContext.Session.GetInt32("UserId") != null)
+            if (HttpContext.Session.GetString("UserEmail") != null)
             {
                 return RedirectToAction("Index", "Dashboard");
             }
@@ -111,6 +111,12 @@ namespace FinalSem2Project.Controllers
             context.SaveChanges();
 
             return RedirectToAction("Login");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Account");
         }
     }
 }

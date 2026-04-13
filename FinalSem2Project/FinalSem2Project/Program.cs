@@ -38,6 +38,11 @@ builder.Services.AddSession(opt =>
 
 var app = builder.Build();
 
+app.MapControllerRoute(
+    name: "stock",
+    pattern: "Stock/{symbol}",
+    defaults: new { controller = "Stock", action = "Index" });
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

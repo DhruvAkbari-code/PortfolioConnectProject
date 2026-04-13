@@ -61,6 +61,7 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\uploads\avatars\avatar_2_639115970628241626.jpg
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\wwwroot\lib\jquery\LICENSE.txt
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\wwwroot\lib\jquery\dist\jquery.slim.min.map
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\wwwroot\lib\jquery\dist\jquery.slim.min.js
