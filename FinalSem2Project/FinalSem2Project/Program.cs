@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddDbContext<StockMarketDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IKiteService, KiteServices>();
@@ -34,6 +36,24 @@ builder.Services.AddSession(opt =>
     opt.Cookie.HttpOnly = true;
     opt.Cookie.IsEssential = true;
 });
+
+// ── Google OAuth ──────────────────────────────────────────────
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "Google";
+})
+.AddCookie("Cookies")
+.AddGoogle("Google", options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"]!;
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"]!;
+    options.CallbackPath = "/signin-google";   // must match Google Console
+    options.SaveTokens = true;
+});
+// ─────────────────────────────────────────────────────────────
+
+
 
 
 var app = builder.Build();
