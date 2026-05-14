@@ -227,5 +227,100 @@ namespace FinalSem2Project.Controllers
             HttpContext.Session.SetString("UserFullName", user.FullName);
             HttpContext.Session.SetString("IsPremium", user.IsPremium.ToString());
         }
+
+
+
+        // GET /Account/ForgotPassword
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // POST /Account/ForgotPassword — verify email exists
+        [HttpPost]
+        public IActionResult ForgotPassword(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                TempData["ErrorMessage"] = "Please enter your email address.";
+                return View();
+            }
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.Email.ToLower() == email.Trim().ToLower() && u.IsActive);
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "No account found with that email address.";
+                return View();
+            }
+
+            if (!string.IsNullOrEmpty(user.GoogleId) && string.IsNullOrEmpty(user.PasswordHash))
+            {
+                TempData["ErrorMessage"] = "This account uses Google Sign-In. No password to reset.";
+                return View();
+            }
+
+            // Store email in session temporarily to verify on reset page
+            HttpContext.Session.SetString("ResetEmail", email.Trim().ToLower());
+            return RedirectToAction("ResetPassword");
+        }
+
+        // GET /Account/ResetPassword
+        public IActionResult ResetPassword()
+        {
+            // Must have come through ForgotPassword — no direct access
+            if (HttpContext.Session.GetString("ResetEmail") == null)
+                return RedirectToAction("ForgotPassword");
+
+            return View();
+        }
+
+        // POST /Account/ResetPassword
+        [HttpPost]
+        public IActionResult ResetPassword(string newPassword, string confirmPassword)
+        {
+            var email = HttpContext.Session.GetString("ResetEmail");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["ErrorMessage"] = "Session expired. Please start again.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                TempData["ErrorMessage"] = "Both fields are required.";
+                return View();
+            }
+
+            if (newPassword.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Password must be at least 6 characters.";
+                return View();
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                TempData["ErrorMessage"] = "Passwords do not match.";
+                return View();
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please try again.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            _context.SaveChanges();
+
+            // Clear reset session key
+            HttpContext.Session.Remove("ResetEmail");
+
+            TempData["SuccessMessage"] = "Password reset successfully! Please sign in.";
+            return RedirectToAction("Login");
+        }
     }
 }

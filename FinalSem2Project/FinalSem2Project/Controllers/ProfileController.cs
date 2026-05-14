@@ -132,15 +132,15 @@ namespace FinalSem2Project.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Verify current password — adjust hash method to match your login logic
-            var currentHash = HashPassword(currentPassword);
-            if (user.PasswordHash != currentHash)
+            // Verify current password using BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
             {
                 TempData["ErrorMessage"] = "Current password is incorrect.";
                 return RedirectToAction("Index");
             }
 
-            user.PasswordHash = HashPassword(newPassword);
+            // Hash the new password with BCrypt
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Password changed successfully!";
