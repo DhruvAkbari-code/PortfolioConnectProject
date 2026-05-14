@@ -19,7 +19,7 @@ namespace FinalSem2Project.Controllers
         public IActionResult Login()
         {
             if (HttpContext.Session.GetString("UserEmail") != null)
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Trending");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace FinalSem2Project.Controllers
             user.LastLoginAt = DateTime.UtcNow;
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Index", "Trending");
         }
 
         // ── Register ─────────────────────────────────────────────────
@@ -65,7 +65,7 @@ namespace FinalSem2Project.Controllers
         public IActionResult Register()
         {
             if (HttpContext.Session.GetString("UserEmail") != null)
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Trending");
             return View();
         }
 
@@ -207,7 +207,7 @@ namespace FinalSem2Project.Controllers
             await HttpContext.SignOutAsync("Cookies");
 
             SetSession(user);
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Index", "Trending");
         }
 
         // ── Logout ───────────────────────────────────────────────────

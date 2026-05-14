@@ -697,3 +697,5 @@ D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bi
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bin\Debug\net10.0\BouncyCastle.Cryptography.dll
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bin\Debug\net10.0\MailKit.dll
 D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bin\Debug\net10.0\MimeKit.dll
+D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bin\Debug\net10.0\BouncyCastle.Crypto.dll
+D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\bin\Debug\net10.0\Razorpay.dll

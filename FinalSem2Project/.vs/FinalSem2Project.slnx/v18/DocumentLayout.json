@@ -3,8 +3,11 @@
   "WorkspaceRootPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\controllers\\kitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\kitecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/StockMarketDb/True/SqlTable/dbo.users.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +22,24 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "KiteController.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\KiteController.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\KiteController.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\KiteController.cs",
-              "RelativeToolTip": "FinalSem2Project\\Controllers\\KiteController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAJAAAAAAAAAA==",
+              "Title": "dbo.users [Data]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/StockMarketDb/True/SqlTable/dbo.users.sql",
+              "ToolTip": "dbo.users [Data]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-05-14T06:46:06.694Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\AccountController.cs",
+              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "FinalSem2Project\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAALAAAAAAAAAAAAAcwNEAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T16:42:33.193Z",
+              "WhenOpened": "2026-05-14T06:36:50.473Z",
               "EditorCaption": ""
             }
           ]

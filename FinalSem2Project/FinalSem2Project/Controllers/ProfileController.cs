@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinalSem2Project.Controllers
 {
+
     public class ProfileController : Controller
     {
         private readonly StockMarketDbContext _db;

@@ -17,6 +17,7 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.5",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "10.0.2",
           "MimeKit": "4.16.0",
+          "Razorpay": "3.3.2",
           "Tech.Zerodha.KiteConnect": "5.0.0"
         },
         "runtime": {
@@ -1817,6 +1818,26 @@
           }
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.1"
+          }
+        }
+      },
+      "Razorpay/3.3.2": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.4",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "runtime": {
+          "lib/net8.0/Razorpay.dll": {
+            "assemblyVersion": "3.3.2.0",
+            "fileVersion": "3.3.2.0"
+          }
+        }
+      },
       "System.ClientModel/1.5.1": {
         "dependencies": {
           "System.Memory.Data": "8.0.1"
@@ -2785,6 +2806,20 @@
       "sha512": "sha512-fJ6rFYANDnohFsdpaY79FvrJxI6murmoOxXz6nZlf819F48+IBKMnAIg3oIBRtZq5y498ObMtKnro5IitvizUg==",
       "path": "nuget.versioning/6.12.1",
       "hashPath": "nuget.versioning.6.12.1.nupkg.sha512"
+    },
+    "Portable.BouncyCastle/1.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "path": "portable.bouncycastle/1.9.0",
+      "hashPath": "portable.bouncycastle.1.9.0.nupkg.sha512"
+    },
+    "Razorpay/3.3.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-t/BFZKYuCZI/if927DrG122ARokL3lAlRhf0PVUjhNFGqjbXc0o32zTOUPF+1Fz9izBoTMdoYn8wVL91Z76Mjg==",
+      "path": "razorpay/3.3.2",
+      "hashPath": "razorpay.3.3.2.nupkg.sha512"
     },
     "System.ClientModel/1.5.1": {
       "type": "package",

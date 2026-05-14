@@ -1,0 +1,290 @@
+﻿@model FinalSem2Project.Models.User
+@{
+    ViewData["Title"] = "Go Premium";
+    Layout = null; // Full-page paywall, no nav clutter
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Premium — StockMarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: #0a0f1e;
+            color: #e8edf5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient background glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: 50%; transform: translateX(-50%);
+            width: 800px; height: 600px;
+            background: radial-gradient(ellipse, rgba(186,117,23,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 24px; left: 24px;
+            font-size: 13px;
+            color: #8896b0;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 6px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #e8edf5; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(186,117,23,0.15);
+            border: 1px solid rgba(186,117,23,0.35);
+            color: #e8a020;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+            padding: 5px 14px; border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 700;
+            line-height: 1.15;
+            text-align: center;
+            margin-bottom: 12px;
+            color: #f0f4ff;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #8896b0;
+            text-align: center;
+            max-width: 420px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 36px;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            backdrop-filter: blur(12px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(186,117,23,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .currency { font-size: 22px; font-weight: 600; color: #e8a020; margin-bottom: 4px; }
+        .amount   { font-size: 56px; font-weight: 700; line-height: 1; color: #f0f4ff; }
+        .period   { font-size: 14px; color: #8896b0; margin-bottom: 8px; }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 24px 0;
+        }
+
+        .features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+
+        .features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #c8d4e8;
+        }
+
+        .features li .icon {
+            width: 24px; height: 24px;
+            background: rgba(34,197,94,0.15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            color: #22c55e;
+            font-size: 11px;
+        }
+
+        .pay-btn {
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px;
+            background: linear-gradient(135deg, #e8a020, #c47a10);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Sora', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 20px rgba(232,160,32,0.3);
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(232,160,32,0.4);
+        }
+
+        .pay-btn:active { transform: translateY(0); }
+
+        .secure-note {
+            text-align: center;
+            font-size: 11px;
+            color: #5a6a80;
+            margin-top: 16px;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+
+        @if (TempData["ErrorMessage"] != null) {
+            /* handled below */
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            max-width: 440px;
+            width: 100%;
+        }
+        .alert-error { background: rgba(220,38,38,0.12); border: 1px solid rgba(220,38,38,0.3); color: #f87171; }
+    </style>
+</head>
+<body>
+
+    <a href="javascript:history.back()" class="back-link">
+        <i class="fas fa-arrow-left"></i> Go back
+    </a>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            <i class="fas fa-circle-exclamation"></i> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="badge"><i class="fas fa-crown"></i> Premium Access</div>
+
+    <h1>Unlock the Full<br>Market Experience</h1>
+    <p class="subtitle">
+        Get real-time Zerodha integration, price targets, full watchlists,
+        and advanced analytics — all for less than a coffee.
+    </p>
+
+    <div class="card">
+        <div class="price-row">
+            <span class="currency">₹</span>
+            <span class="amount">100</span>
+        </div>
+        <div class="period">per month &nbsp;·&nbsp; cancel anytime</div>
+
+        <div class="divider"></div>
+
+        <ul class="features">
+            <li>
+                <span class="icon"><i class="fas fa-check"></i></span>
+                Zerodha Kite integration &amp; live portfolio
+            </li>
+            <li>
+                <span class="icon"><i class="fas fa-check"></i></span>
+                Price targets with real-time alerts
+            </li>
+            <li>
+                <span class="icon"><i class="fas fa-check"></i></span>
+                Unlimited watchlist stocks
+            </li>
+            <li>
+                <span class="icon"><i class="fas fa-check"></i></span>
+                NSE/BSE trending stocks dashboard
+            </li>
+            <li>
+                <span class="icon"><i class="fas fa-check"></i></span>
+                Advanced stock detail &amp; analytics
+            </li>
+        </ul>
+
+        <button class="pay-btn" id="rzp-button">
+            <i class="fas fa-crown"></i> Subscribe for ₹100 / month
+        </button>
+
+        <p class="secure-note">
+            <i class="fas fa-lock"></i> Secured by Razorpay &nbsp;·&nbsp; 256-bit SSL
+        </p>
+    </div>
+
+    @* Hidden form to POST verified payment back to server *@
+    <form id="payment-form" method="post" action="/Premium/VerifyPayment">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" />
+        <input type="hidden" id="razorpay_order_id"   name="razorpay_order_id"   />
+        <input type="hidden" id="razorpay_signature"  name="razorpay_signature"  />
+    </form>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            key:         "@ViewBag.RazorpayKeyId",
+            amount:      "10000",
+            currency:    "INR",
+            name:        "StockMarket Pro",
+            description: "Premium Monthly Subscription",
+            order_id:    "@ViewBag.OrderId",
+            prefill: {
+                name:  "@(Model?.FullName ?? "")",
+                email: "@(Model?.Email ?? "")"
+            },
+            theme: { color: "#e8a020" },
+            handler: function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value   = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value  = response.razorpay_signature;
+                document.getElementById('payment-form').submit();
+            },
+            modal: {
+                ondismiss: function () {
+                    console.log('Payment modal closed');
+                }
+            }
+        };
+
+        document.getElementById('rzp-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            var rzp = new Razorpay(options);
+            rzp.open();
+        });
+    </script>
+</body>
+</html>

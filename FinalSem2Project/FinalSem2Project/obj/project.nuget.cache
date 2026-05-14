@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZMufn2M3tNs=",
+  "dgSpecHash": "LZO4bHKpvDM=",
   "success": true,
   "projectFilePath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\FinalSem2Project.csproj",
   "expectedPackageFiles": [
@@ -122,6 +122,8 @@
     "C:\\Users\\addhr\\.nuget\\packages\\nuget.projectmodel\\6.12.1\\nuget.projectmodel.6.12.1.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\nuget.protocol\\6.12.1\\nuget.protocol.6.12.1.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\nuget.versioning\\6.12.1\\nuget.versioning.6.12.1.nupkg.sha512",
+    "C:\\Users\\addhr\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
+    "C:\\Users\\addhr\\.nuget\\packages\\razorpay\\3.3.2\\razorpay.3.3.2.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\system.clientmodel\\1.5.1\\system.clientmodel.1.5.1.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\system.codedom\\7.0.0\\system.codedom.7.0.0.nupkg.sha512",
     "C:\\Users\\addhr\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",

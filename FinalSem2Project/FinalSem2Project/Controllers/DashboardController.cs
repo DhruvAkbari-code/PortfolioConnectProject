@@ -1,9 +1,12 @@
 ﻿using FinalSem2Project.Services;
 using Microsoft.AspNetCore.Mvc;
 using FinalSem2Project.Models;
+using FinalSem2Project.Filters;
+
 
 namespace FinalSem2Project.Controllers
 {
+    [PremiumRequired]
     public class DashboardController : Controller
     {
         private readonly IKiteService kiteservice;
