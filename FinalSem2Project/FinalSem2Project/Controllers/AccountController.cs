@@ -222,6 +222,11 @@ namespace FinalSem2Project.Controllers
 
         private void SetSession(User user)
         {
+            if (user.IsPremium && user.SubscriptionEnd.HasValue && user.SubscriptionEnd.Value < DateTime.UtcNow)
+            {
+                user.IsPremium = false;
+                _context.SaveChanges();
+            }
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("UserEmail", user.Email);
             HttpContext.Session.SetString("UserFullName", user.FullName);

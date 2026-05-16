@@ -1,6 +1,8 @@
 using FinalSem2Project.Models;
 using FinalSem2Project.Services;
 using Microsoft.EntityFrameworkCore;
+using FinalSem2Project.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +75,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
+app.UseMiddleware<SubscriptionExpiryMiddleware>();
 app.UseAuthorization();
 
 
