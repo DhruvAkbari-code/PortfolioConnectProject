@@ -1,0 +1,21 @@
+﻿@model FinalSem2Project.Models.ZerodhaUserKeysModel
+
+<h2>Zerodha API Keys</h2>
+<p>
+    Enter your personal Zerodha API key and secret from
+    <a href="https://developers.kite.trade" target="_blank">developers.kite.trade</a>.
+</p>
+
+<form asp-action="ZerodhaSettings" method="post">
+    <div class="mb-3">
+        <label asp-for="ApiKey" class="form-label">API Key</label>
+        <input asp-for="ApiKey" class="form-control" placeholder="e.g. abc123xyz" />
+        <span asp-validation-for="ApiKey" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ApiSecret" class="form-label">API Secret</label>
+        <input asp-for="ApiSecret" class="form-control" type="password" placeholder="Leave blank to keep existing" />
+        <span asp-validation-for="ApiSecret" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Keys</button>
+</form>

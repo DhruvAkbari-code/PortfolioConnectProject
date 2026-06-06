@@ -28,8 +28,8 @@ builder.Services.AddHttpClient<StockPriceService>()
                                | System.Net.DecompressionMethods.Brotli
     });
 
-builder.Services.Configure<ZerodhaSettings>(
-    builder.Configuration.GetSection("Zerodha"));
+//builder.Services.Configure<ZerodhaSettings>(
+    //builder.Configuration.GetSection("Zerodha"));
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opt =>

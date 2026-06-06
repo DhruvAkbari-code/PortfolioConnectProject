@@ -1,84 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/StockMarketDb/True/SqlTable/dbo.users.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\middleware\\subscriptionexpirymiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\middleware\\subscriptionexpirymiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "dbo.users [Data]",
-              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/StockMarketDb/True/SqlTable/dbo.users.sql",
-              "ToolTip": "dbo.users [Data]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-05-16T04:41:17.344Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Controllers\\AccountController.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "FinalSem2Project\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAANQAAAAAAAAAAAAcwPQAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-16T04:36:13.266Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Program.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Program.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Program.cs",
-              "RelativeToolTip": "FinalSem2Project\\Program.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAFYAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-16T04:34:57.533Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SubscriptionExpiryMiddleware.cs",
-              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Middleware\\SubscriptionExpiryMiddleware.cs",
-              "RelativeDocumentMoniker": "FinalSem2Project\\Middleware\\SubscriptionExpiryMiddleware.cs",
-              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Middleware\\SubscriptionExpiryMiddleware.cs",
-              "RelativeToolTip": "FinalSem2Project\\Middleware\\SubscriptionExpiryMiddleware.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-16T04:34:25.792Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

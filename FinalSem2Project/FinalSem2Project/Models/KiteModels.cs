@@ -1,4 +1,5 @@
-﻿using KiteConnect;
+﻿using System.ComponentModel.DataAnnotations;
+using KiteConnect;
 
 namespace FinalSem2Project.Models
 {
@@ -31,4 +32,13 @@ namespace FinalSem2Project.Models
         public string RedirctUrl { get; set; }
     }
 
+    // ── NEW: used by the ZerodhaSettings form ──────────────────
+    public class ZerodhaUserKeysModel
+    {
+        [Required(ErrorMessage = "API Key is required")]
+        public string? ApiKey { get; set; }
+
+        [Required(ErrorMessage = "API Secret is required")]
+        public string? ApiSecret { get; set; }
+    }
 }

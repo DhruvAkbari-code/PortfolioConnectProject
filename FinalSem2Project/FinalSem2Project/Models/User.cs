@@ -33,7 +33,11 @@ public partial class User
 
     public DateTime? LastLoginAt { get; set; }
 
+    public string? ZerodhaApiKey { get; set; }
+
+    public string? ZerodhaApiSecret { get; set; }
     public virtual ICollection<StockTarget> StockTargets { get; set; } = new List<StockTarget>();
 
     public virtual ICollection<Watchlist> Watchlists { get; set; } = new List<Watchlist>();
+
 }
