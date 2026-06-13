@@ -156,5 +156,56 @@ namespace FinalSem2Project.Controllers
             var hash = sha.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
+
+        // GET /Profile/ZerodhaKeys — returns current keys status (for partial refresh if needed)
+        public async Task<IActionResult> ZerodhaKeys()
+        {
+            if (CurrentUserEmail == null) return RedirectToAction("Login", "Account");
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == CurrentUserEmail);
+            if (user == null) return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index");
+        }
+
+        // POST /Profile/SaveZerodhaKeys
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveZerodhaKeys(string apiKey, string? apiSecret)
+        {
+            if (CurrentUserEmail == null) return RedirectToAction("Login", "Account");
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == CurrentUserEmail);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                TempData["ErrorMessage"] = "API Key cannot be empty.";
+                return RedirectToAction("Index");
+            }
+
+            user.ZerodhaApiKey = apiKey.Trim();
+
+            if (!string.IsNullOrWhiteSpace(apiSecret))
+                user.ZerodhaApiSecret = apiSecret.Trim();
+
+            await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Zerodha API keys updated successfully!";
+            return RedirectToAction("Index");
+        }
+
+        // POST /Profile/RemoveZerodhaKeys
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveZerodhaKeys()
+        {
+            if (CurrentUserEmail == null) return RedirectToAction("Login", "Account");
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == CurrentUserEmail);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            user.ZerodhaApiKey = null;
+            user.ZerodhaApiSecret = null;
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Zerodha API keys removed.";
+            return RedirectToAction("Index");
+        }
     }
 }

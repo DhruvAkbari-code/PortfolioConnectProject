@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|d:\\semesters\\msc.ict\\sem-2\\portfolioconnect\\finalsem2project\\finalsem2project\\views\\profile\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6DDB343B-0D6E-73E6-CDDA-B2D3D0FB33B7}|FinalSem2Project\\FinalSem2Project.csproj|solutionrelative:finalsem2project\\views\\profile\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Views\\Profile\\Index.cshtml",
+              "RelativeDocumentMoniker": "FinalSem2Project\\Views\\Profile\\Index.cshtml",
+              "ToolTip": "D:\\SEMESTERS\\MSC.ICT\\SEM-2\\PortfolioConnect\\FinalSem2Project\\FinalSem2Project\\Views\\Profile\\Index.cshtml",
+              "RelativeToolTip": "FinalSem2Project\\Views\\Profile\\Index.cshtml",
+              "ViewState": "AgIAABYAAAAAAAAAAAAIwLAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-13T07:25:52.633Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

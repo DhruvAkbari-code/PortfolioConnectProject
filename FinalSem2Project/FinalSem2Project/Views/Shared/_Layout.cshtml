@@ -48,6 +48,10 @@
                         <span class="nav-icon"><i class="fas fa-plug"></i></span>
                         <span class="nav-label">Kite Connect</span>
                     </a>
+                    <a href="/Chat" class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Chat" ? "active" : "")">
+                        <span class="nav-icon"><i class="fas fa-robot"></i></span>
+                        <span class="nav-label">AI Assistant</span>
+                    </a>
                 </nav>
 
                 <div class="sidebar-footer">

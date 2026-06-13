@@ -1,21 +1,228 @@
 ﻿@model FinalSem2Project.Models.ZerodhaUserKeysModel
+@{
+    ViewData["Title"] = "Zerodha API Keys";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<h2>Zerodha API Keys</h2>
-<p>
-    Enter your personal Zerodha API key and secret from
-    <a href="https://developers.kite.trade" target="_blank">developers.kite.trade</a>.
-</p>
+<style>
+    .settings-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        max-width: 560px;
+    }
 
-<form asp-action="ZerodhaSettings" method="post">
-    <div class="mb-3">
-        <label asp-for="ApiKey" class="form-label">API Key</label>
-        <input asp-for="ApiKey" class="form-control" placeholder="e.g. abc123xyz" />
-        <span asp-validation-for="ApiKey" class="text-danger"></span>
+    .settings-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .settings-icon {
+        width: 42px;
+        height: 42px;
+        background: var(--accent-dim);
+        border: 1px solid rgba(110, 231, 183, 0.2);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .settings-header-info h2 {
+        font-family: var(--font-head);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 3px 0;
+    }
+
+    .settings-header-info p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .info-banner {
+        background: var(--accent-dim);
+        border: 1px solid rgba(110, 231, 183, 0.15);
+        border-radius: var(--radius-md);
+        padding: 12px 16px;
+        margin-bottom: 24px;
+        font-size: 12px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+        .info-banner i {
+            color: var(--accent);
+            font-size: 14px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .info-banner a {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+    .field-group {
+        margin-bottom: 20px;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+    }
+
+    .field-input-wrap {
+        position: relative;
+    }
+
+    .field-input {
+        width: 100%;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 11px 14px;
+        color: var(--text-primary);
+        font-size: 13px;
+        font-family: var(--font-body);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .field-input:focus {
+            border-color: rgba(110, 231, 183, 0.4);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .field-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .field-input.has-toggle {
+            padding-right: 44px;
+        }
+
+    .toggle-visibility {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 15px;
+        padding: 4px;
+        transition: color 0.2s;
+    }
+
+        .toggle-visibility:hover {
+            color: var(--text-secondary);
+        }
+
+    .field-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+    }
+
+    .validation-msg {
+        font-size: 11px;
+        color: var(--red);
+        margin-top: 5px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+    }
+</style>
+
+<div class="settings-card">
+
+    <div class="settings-header">
+        <div class="settings-icon">
+            <i class="fas fa-key"></i>
+        </div>
+        <div class="settings-header-info">
+            <h2>Zerodha API Keys</h2>
+            <p>Connect your personal Kite Connect credentials</p>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="ApiSecret" class="form-label">API Secret</label>
-        <input asp-for="ApiSecret" class="form-control" type="password" placeholder="Leave blank to keep existing" />
-        <span asp-validation-for="ApiSecret" class="text-danger"></span>
+
+    <div class="info-banner">
+        <i class="fas fa-info-circle"></i>
+        <span>
+            Get your API key and secret from
+            <a href="https://developers.kite.trade" target="_blank">developers.kite.trade</a>.
+            Each user must provide their own credentials to enable live trading features.
+        </span>
     </div>
-    <button type="submit" class="btn btn-primary">Save Keys</button>
-</form>
+
+    <form asp-action="ZerodhaSettings" method="post">
+
+        <div class="field-group">
+            <label asp-for="ApiKey" class="field-label">API Key</label>
+            <div class="field-input-wrap">
+                <input asp-for="ApiKey" class="field-input" placeholder="e.g. abc123xyz" autocomplete="off" />
+            </div>
+            <span asp-validation-for="ApiKey" class="validation-msg"></span>
+        </div>
+
+        <div class="field-group">
+            <label asp-for="ApiSecret" class="field-label">API Secret</label>
+            <div class="field-input-wrap">
+                <input asp-for="ApiSecret" class="field-input has-toggle" type="password"
+                       id="apiSecretInput" placeholder="Leave blank to keep existing" autocomplete="new-password" />
+                <button type="button" class="toggle-visibility" onclick="toggleSecret()" title="Toggle visibility">
+                    <i class="fas fa-eye" id="toggleIcon"></i>
+                </button>
+            </div>
+            <div class="field-hint">Your existing secret is preserved if this field is left empty.</div>
+            <span asp-validation-for="ApiSecret" class="validation-msg"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Keys
+            </button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleSecret() {
+            const input = document.getElementById('apiSecretInput');
+            const icon = document.getElementById('toggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
+}

@@ -8,6 +8,10 @@
     var memberSince = Model.CreatedAt.ToString("MMMM yyyy");
     var lastLogin = Model.LastLoginAt.HasValue
                       ? Model.LastLoginAt.Value.ToString("dd MMM yyyy, HH:mm") : "—";
+    var hasZerodhaKey = !string.IsNullOrEmpty(Model.ZerodhaApiKey);
+    var maskedKey = hasZerodhaKey
+        ? Model.ZerodhaApiKey!.Substring(0, Math.Min(4, Model.ZerodhaApiKey.Length)) + "••••••••"
+        : null;
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -35,30 +39,27 @@
         @* Profile Card *@
         <div class="card" style="padding:28px;text-align:center">
 
-            @* Avatar *@
             <div style="position:relative;display:inline-block;margin-bottom:16px">
                 @if (hasAvatar)
                 {
                     <img src="@Model.AvatarUrl" alt="Avatar"
                          style="width:90px;height:90px;border-radius:50%;object-fit:cover;
-                    border:3px solid var(--border-color, #eee)" />
+                    border:3px solid var(--border)" />
                 }
                 else
                 {
                     <div style="width:90px;height:90px;border-radius:50%;
-                        background:rgba(56,138,221,0.15);
-                        color:#185FA5;font-size:28px;font-weight:500;
-                        display:flex;align-items:center;justify-content:center;
-                        margin:0 auto">
+                        background:var(--accent-dim);border:1px solid rgba(110,231,183,0.2);
+                        color:var(--accent);font-size:28px;font-weight:500;
+                        display:flex;align-items:center;justify-content:center;margin:0 auto">
                         @initials
                     </div>
                 }
             </div>
 
-            <div style="font-size:18px;font-weight:500;margin-bottom:4px">@Model.FullName</div>
+            <div style="font-size:18px;font-weight:500;margin-bottom:4px;color:var(--text-primary)">@Model.FullName</div>
             <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">@Model.Email</div>
 
-            @* Badges *@
             <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
                 @if (Model.IsPremium)
                 {
@@ -70,28 +71,35 @@
                 @if (Model.EmailVerified)
                 {
                     <span style="font-size:11px;padding:3px 10px;border-radius:20px;
-                        background:rgba(0,160,90,0.1);color:var(--green);font-weight:500">
+                        background:var(--green-dim);color:var(--green);font-weight:500">
                         <i class="fas fa-circle-check" style="font-size:10px"></i> Verified
                     </span>
                 }
                 @if (!string.IsNullOrEmpty(Model.GoogleId))
                 {
                     <span style="font-size:11px;padding:3px 10px;border-radius:20px;
-                        background:rgba(56,138,221,0.1);color:#185FA5;font-weight:500">
+                        background:rgba(56,138,221,0.1);color:#60a5fa;font-weight:500">
                         <i class="fab fa-google" style="font-size:10px"></i> Google
+                    </span>
+                }
+                @if (hasZerodhaKey)
+                {
+                    <span style="font-size:11px;padding:3px 10px;border-radius:20px;
+                        background:var(--accent-dim);color:var(--accent);font-weight:500">
+                        <i class="fas fa-link" style="font-size:10px"></i> Zerodha
                     </span>
                 }
             </div>
 
-            <div style="border-top:0.5px solid var(--border-color,#eee);padding-top:16px;
+            <div style="border-top:1px solid var(--border);padding-top:16px;
                 display:flex;flex-direction:column;gap:8px;text-align:left">
                 <div style="display:flex;justify-content:space-between;font-size:12px">
                     <span style="color:var(--text-secondary)">Member since</span>
-                    <span>@memberSince</span>
+                    <span style="color:var(--text-primary)">@memberSince</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:12px">
                     <span style="color:var(--text-secondary)">Last login</span>
-                    <span>@lastLogin</span>
+                    <span style="color:var(--text-primary)">@lastLogin</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:12px">
                     <span style="color:var(--text-secondary)">Account status</span>
@@ -104,9 +112,8 @@
 
         @* Stats Card *@
         <div class="card" style="padding:20px">
-            <div style="font-size:13px;font-weight:500;margin-bottom:14px;
-                color:var(--text-secondary);text-transform:uppercase;
-                letter-spacing:0.04em;font-size:11px">
+            <div style="font-size:11px;font-weight:600;margin-bottom:14px;
+                color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">
                 Activity
             </div>
             <div style="display:flex;flex-direction:column;gap:12px">
@@ -115,14 +122,14 @@
                         <i class="fas fa-heart" style="color:var(--red);margin-right:6px;font-size:12px"></i>
                         Watchlist stocks
                     </span>
-                    <span style="font-size:16px;font-weight:500">@ViewBag.WatchlistCount</span>
+                    <span style="font-size:16px;font-weight:500;color:var(--text-primary)">@ViewBag.WatchlistCount</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center">
                     <span style="font-size:13px;color:var(--text-secondary)">
-                        <i class="fas fa-bullseye" style="color:#e25c1a;margin-right:6px;font-size:12px"></i>
+                        <i class="fas fa-bullseye" style="color:var(--amber);margin-right:6px;font-size:12px"></i>
                         Total targets
                     </span>
-                    <span style="font-size:16px;font-weight:500">@ViewBag.TargetCount</span>
+                    <span style="font-size:16px;font-weight:500;color:var(--text-primary)">@ViewBag.TargetCount</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center">
                     <span style="font-size:13px;color:var(--text-secondary)">
@@ -139,7 +146,7 @@
     @* ── Right Column: Edit Forms ── *@
     <div style="display:flex;flex-direction:column;gap:20px">
 
-        @* Update Profile Info *@
+        @* ── Profile Information ── *@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">
@@ -161,14 +168,13 @@
                             <label class="form-label">Email</label>
                             <input type="email" class="form-input"
                                    value="@Model.Email" disabled
-                                   style="opacity:0.6;cursor:not-allowed" />
-                            <span style="font-size:11px;color:var(--text-secondary)">
+                                   style="opacity:0.5;cursor:not-allowed" />
+                            <span style="font-size:11px;color:var(--text-muted)">
                                 Email cannot be changed
                             </span>
                         </div>
                     </div>
 
-                    @* Profile Picture Upload *@
                     <div class="form-group">
                         <label class="form-label">Profile Picture</label>
                         <div style="display:flex;align-items:center;gap:16px">
@@ -176,13 +182,13 @@
                             {
                                 <img src="@Model.AvatarUrl" alt="Current avatar"
                                      style="width:48px;height:48px;border-radius:50%;object-fit:cover;
-                                border:2px solid var(--border-color,#eee)" />
+                                border:2px solid var(--border)" />
                             }
                             else
                             {
                                 <div style="width:48px;height:48px;border-radius:50%;
-                                    background:rgba(56,138,221,0.15);color:#185FA5;
-                                    font-size:16px;font-weight:500;
+                                    background:var(--accent-dim);border:1px solid rgba(110,231,183,0.2);
+                                    color:var(--accent);font-size:16px;font-weight:500;
                                     display:flex;align-items:center;justify-content:center">
                                     @initials
                                 </div>
@@ -191,7 +197,7 @@
                                 <input type="file" name="avatarFile" id="avatarFile"
                                        accept=".jpg,.jpeg,.png,.webp"
                                        class="form-input" style="padding:6px" />
-                                <span style="font-size:11px;color:var(--text-secondary)">
+                                <span style="font-size:11px;color:var(--text-muted)">
                                     JPG, PNG or WEBP — max 2MB
                                 </span>
                             </div>
@@ -207,7 +213,7 @@
             </div>
         </div>
 
-        @* Change Password *@
+        @* ── Change Password ── *@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">
@@ -219,7 +225,8 @@
 
                 @if (!string.IsNullOrEmpty(Model.GoogleId))
                 {
-                    <div style="padding:16px;background:rgba(56,138,221,0.07);border-radius:8px;
+                    <div style="padding:16px;background:rgba(56,138,221,0.07);
+                        border:1px solid rgba(56,138,221,0.15);border-radius:var(--radius-md);
                         font-size:13px;color:var(--text-secondary);text-align:center">
                         <i class="fab fa-google" style="margin-right:6px"></i>
                         Your account uses Google login — password change is not available.
@@ -234,10 +241,11 @@
                             <label class="form-label">Current Password</label>
                             <div style="position:relative">
                                 <input type="password" name="currentPassword" id="currentPwd"
-                                       class="form-input" placeholder="Enter current password" required />
+                                       class="form-input" style="padding-right:42px"
+                                       placeholder="Enter current password" required />
                                 <button type="button" onclick="togglePwd('currentPwd', this)"
                                         style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
-                                    background:none;border:none;cursor:pointer;color:var(--text-secondary)">
+                                    background:none;border:none;cursor:pointer;color:var(--text-muted)">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
@@ -248,10 +256,11 @@
                                 <label class="form-label">New Password</label>
                                 <div style="position:relative">
                                     <input type="password" name="newPassword" id="newPwd"
-                                           class="form-input" placeholder="Min 6 characters" required />
+                                           class="form-input" style="padding-right:42px"
+                                           placeholder="Min 6 characters" required />
                                     <button type="button" onclick="togglePwd('newPwd', this)"
                                             style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
-                                        background:none;border:none;cursor:pointer;color:var(--text-secondary)">
+                                        background:none;border:none;cursor:pointer;color:var(--text-muted)">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -260,28 +269,29 @@
                                 <label class="form-label">Confirm New Password</label>
                                 <div style="position:relative">
                                     <input type="password" name="confirmPassword" id="confirmPwd"
-                                           class="form-input" placeholder="Repeat new password" required />
+                                           class="form-input" style="padding-right:42px"
+                                           placeholder="Repeat new password" required />
                                     <button type="button" onclick="togglePwd('confirmPwd', this)"
                                             style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
-                                        background:none;border:none;cursor:pointer;color:var(--text-secondary)">
+                                        background:none;border:none;cursor:pointer;color:var(--text-muted)">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        @* Password strength indicator *@
-                        <div style="margin-top:12px">
-                            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">
+                        <div style="margin-top:14px">
+                            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;
+                                text-transform:uppercase;letter-spacing:0.05em">
                                 Password strength
                             </div>
                             <div style="display:flex;gap:4px">
-                                <div id="str1" style="height:4px;flex:1;border-radius:2px;background:var(--border-color,#eee)"></div>
-                                <div id="str2" style="height:4px;flex:1;border-radius:2px;background:var(--border-color,#eee)"></div>
-                                <div id="str3" style="height:4px;flex:1;border-radius:2px;background:var(--border-color,#eee)"></div>
-                                <div id="str4" style="height:4px;flex:1;border-radius:2px;background:var(--border-color,#eee)"></div>
+                                <div id="str1" style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div id="str2" style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div id="str3" style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div id="str4" style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
                             </div>
-                            <div id="strLabel" style="font-size:11px;margin-top:4px;color:var(--text-secondary)"></div>
+                            <div id="strLabel" style="font-size:11px;margin-top:5px;color:var(--text-muted)"></div>
                         </div>
 
                         <div style="display:flex;justify-content:flex-end;margin-top:16px">
@@ -294,7 +304,119 @@
             </div>
         </div>
 
-        @* Account Info (read-only) *@
+        @* ── Zerodha API Keys ── *@
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">
+                    <i class="fas fa-key" style="margin-right:8px;color:var(--text-secondary)"></i>
+                    Zerodha API Keys
+                </span>
+                @if (hasZerodhaKey)
+                {
+                    <span style="font-size:11px;padding:3px 10px;border-radius:20px;
+                        background:var(--green-dim);color:var(--green);font-weight:500">
+                        <i class="fas fa-circle-check" style="font-size:10px"></i> Connected
+                    </span>
+                }
+                else
+                {
+                    <span style="font-size:11px;padding:3px 10px;border-radius:20px;
+                        background:var(--red-dim);color:var(--red);font-weight:500">
+                        <i class="fas fa-circle-xmark" style="font-size:10px"></i> Not Connected
+                    </span>
+                }
+            </div>
+            <div style="padding:24px">
+
+                @if (hasZerodhaKey)
+                {
+                    <div style="background:var(--bg-elevated);border:1px solid var(--border);
+                        border-radius:var(--radius-md);padding:14px 16px;margin-bottom:20px;
+                        display:flex;align-items:center;justify-content:space-between">
+                        <div>
+                            <div style="font-size:11px;color:var(--text-muted);
+                                text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">
+                                Active API Key
+                            </div>
+                            <div style="font-size:14px;font-weight:500;color:var(--text-primary);
+                                font-family:monospace;letter-spacing:0.04em">
+                                @maskedKey
+                            </div>
+                        </div>
+                        <i class="fas fa-link" style="color:var(--accent);font-size:18px"></i>
+                    </div>
+                }
+                else
+                {
+                    <div style="background:var(--accent-dim);border:1px solid rgba(110,231,183,0.15);
+                        border-radius:var(--radius-md);padding:12px 16px;margin-bottom:20px;
+                        font-size:12px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start">
+                        <i class="fas fa-info-circle" style="color:var(--accent);margin-top:1px;flex-shrink:0"></i>
+                        <span>
+                            Connect your Zerodha account to enable live portfolio and trading features.
+                            Get your keys from
+                            <a href="https://developers.kite.trade" target="_blank"
+                               style="color:var(--accent);text-decoration:underline">developers.kite.trade</a>.
+                        </span>
+                    </div>
+                }
+
+                <form method="post" action="/Profile/SaveZerodhaKeys">
+                    @Html.AntiForgeryToken()
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label">API Key</label>
+                            <input type="text" name="apiKey" class="form-input"
+                                   value="@Model.ZerodhaApiKey"
+                                   placeholder="e.g. abc123xyz" autocomplete="off" />
+                        </div>
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label">API Secret</label>
+                            <div style="position:relative">
+                                <input type="password" name="apiSecret" id="zerodhaSecret"
+                                       class="form-input" style="padding-right:42px"
+                                       placeholder="@(hasZerodhaKey ? "Leave blank to keep existing" : "Enter API secret")"
+                                       autocomplete="new-password" />
+                                <button type="button" onclick="togglePwd('zerodhaSecret', this)"
+                                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                                    background:none;border:none;cursor:pointer;color:var(--text-muted)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:11px;color:var(--text-muted)">
+                            @if (hasZerodhaKey)
+                            {
+                                <span>Leave secret blank to keep your existing one.</span>
+                            }
+                        </span>
+                        <div style="display:flex;gap:10px">
+                            @if (hasZerodhaKey)
+                            {
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="confirmRemoveKeys()">
+                                    <i class="fas fa-trash-alt"></i> Remove Keys
+                                </button>
+                            }
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fas fa-save"></i> @(hasZerodhaKey ? "Update Keys" : "Save Keys")
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <form id="removeKeysForm" method="post" action="/Profile/RemoveZerodhaKeys" style="display:none">
+                    @Html.AntiForgeryToken()
+                </form>
+
+            </div>
+        </div>
+
+        @* ── Account Details ── *@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">
@@ -304,16 +426,25 @@
             </div>
             <div style="padding:24px">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                    <div style="background:rgba(186,117,23,0.08);border-radius:8px;padding:14px">
-                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">Account Type</div>
-                        <div style="font-size:14px;font-weight:500">
-                            @(Model.IsPremium ? "Premium" : "Free")
+                    <div style="background:var(--bg-elevated);border:1px solid var(--border);
+                        border-radius:var(--radius-md);padding:14px">
+                        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;
+                            text-transform:uppercase;letter-spacing:0.05em">
+                            Account Type
+                        </div>
+                        <div style="font-size:14px;font-weight:500;
+                            color:@(Model.IsPremium ? "#BA7517" : "var(--text-primary)")">
+                            @(Model.IsPremium ? "⭐ Premium" : "Free")
                         </div>
                     </div>
                     @if (Model.IsPremium && Model.SubscriptionEnd.HasValue)
                     {
-                        <div style="background:rgba(186,117,23,0.08);border-radius:8px;padding:14px">
-                            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">Subscription Ends</div>
+                        <div style="background:var(--bg-elevated);border:1px solid var(--border);
+                            border-radius:var(--radius-md);padding:14px">
+                            <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;
+                                text-transform:uppercase;letter-spacing:0.05em">
+                                Subscription Ends
+                            </div>
                             <div style="font-size:14px;font-weight:500;color:#BA7517">
                                 @Model.SubscriptionEnd.Value.ToString("dd MMM yyyy")
                             </div>
@@ -330,7 +461,7 @@
     <script>
         function togglePwd(inputId, btn) {
             const input = document.getElementById(inputId);
-            const icon  = btn.querySelector('i');
+            const icon = btn.querySelector('i');
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.className = 'fas fa-eye-slash';
@@ -340,44 +471,46 @@
             }
         }
 
-        // Password strength meter
+        function confirmRemoveKeys() {
+            if (confirm('Remove your Zerodha API keys? Live trading features will be disabled.')) {
+                document.getElementById('removeKeysForm').submit();
+            }
+        }
+
         document.getElementById('newPwd')?.addEventListener('input', function () {
-            const val    = this.value;
-            const bars   = [
+            const val = this.value;
+            const bars = [
                 document.getElementById('str1'),
                 document.getElementById('str2'),
                 document.getElementById('str3'),
                 document.getElementById('str4')
             ];
-            const label  = document.getElementById('strLabel');
+            const label = document.getElementById('strLabel');
 
             let score = 0;
-            if (val.length >= 6)                        score++;
-            if (val.length >= 10)                       score++;
+            if (val.length >= 6) score++;
+            if (val.length >= 10) score++;
             if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val))              score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
 
             const colors = ['#e24b4a', '#e25c1a', '#BA7517', 'var(--green)'];
             const labels = ['Weak', 'Fair', 'Good', 'Strong'];
 
             bars.forEach((b, i) => {
-                b.style.background = i < score
-                    ? colors[score - 1]
-                    : 'var(--border-color, #eee)';
+                b.style.background = i < score ? colors[score - 1] : 'var(--border)';
             });
 
-            label.textContent  = score > 0 ? labels[score - 1] : '';
-            label.style.color  = score > 0 ? colors[score - 1] : 'var(--text-secondary)';
+            label.textContent = score > 0 ? labels[score - 1] : '';
+            label.style.color = score > 0 ? colors[score - 1] : 'var(--text-muted)';
         });
 
-        // Preview avatar before upload
         document.getElementById('avatarFile')?.addEventListener('change', function () {
             const file = this.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = e => {
-                const imgs = document.querySelectorAll('img[alt="Current avatar"], img[alt="Avatar"]');
-                imgs.forEach(img => { img.src = e.target.result; });
+                document.querySelectorAll('img[alt="Current avatar"], img[alt="Avatar"]')
+                    .forEach(img => { img.src = e.target.result; });
             };
             reader.readAsDataURL(file);
         });
