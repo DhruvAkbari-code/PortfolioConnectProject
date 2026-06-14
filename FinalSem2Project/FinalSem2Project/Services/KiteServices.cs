@@ -3,7 +3,7 @@ using KiteConnect;
 
 public interface IKiteService
 {
-    string GetLoginUrl(string apiKey);
+    string GetLoginUrl(string apiKey, int accountId, string baseUrl);
     Task<KiteCallbackModel> GenerateSession(string requestToken, string apiKey, string apiSecret);
     Task<PortfolioViewModel> GetPortfolio(string accessToken, string apiKey);
 }
@@ -12,9 +12,10 @@ public class KiteServices : IKiteService
 {
     // No constructor needed — no settings injected
 
-    public string GetLoginUrl(string apiKey)
+    public string GetLoginUrl(string apiKey, int accountId, string baseUrl)
     {
-        return $"https://kite.zerodha.com/connect/login?v=3&api_key={Uri.EscapeDataString(apiKey)}";
+        var encodedParams = Uri.EscapeDataString($"accountId={accountId}");
+        return $"https://kite.zerodha.com/connect/login?v=3&api_key={Uri.EscapeDataString(apiKey)}&redirect_params={encodedParams}";
     }
 
     public async Task<KiteCallbackModel> GenerateSession(string requestToken, string apiKey, string apiSecret)

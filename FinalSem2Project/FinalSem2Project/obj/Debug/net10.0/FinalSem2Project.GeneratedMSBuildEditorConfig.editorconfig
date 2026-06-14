@@ -17,12 +17,13 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
+build_property.EntryPointFilePath = 
 build_property.RootNamespace = FinalSem2Project
 build_property.RootNamespace = FinalSem2Project
 build_property.ProjectDir = D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.RazorLangVersion = 9.0
+build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = D:\SEMESTERS\MSC.ICT\SEM-2\PortfolioConnect\FinalSem2Project\FinalSem2Project
@@ -54,12 +55,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/SEMESTERS/MSC.ICT/SEM-2/PortfolioConnect/FinalSem2Project/FinalSem2Project/Views/Kite/AddAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0ZVxBZGRBY2NvdW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/SEMESTERS/MSC.ICT/SEM-2/PortfolioConnect/FinalSem2Project/FinalSem2Project/Views/Kite/Callback.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0ZVxDYWxsYmFjay5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/SEMESTERS/MSC.ICT/SEM-2/PortfolioConnect/FinalSem2Project/FinalSem2Project/Views/Kite/Connect.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0ZVxDb25uZWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/SEMESTERS/MSC.ICT/SEM-2/PortfolioConnect/FinalSem2Project/FinalSem2Project/Views/Kite/EditAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0ZVxFZGl0QWNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/SEMESTERS/MSC.ICT/SEM-2/PortfolioConnect/FinalSem2Project/FinalSem2Project/Views/Kite/ZerodhaSettings.cshtml]

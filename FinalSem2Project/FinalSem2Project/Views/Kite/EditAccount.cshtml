@@ -1,0 +1,66 @@
+﻿@model FinalSem2Project.Models.ZerodhaAccountFormModel
+@{ ViewData["Title"] = "Edit Account"; }
+
+<div style="max-width:520px">
+    <div style="margin-bottom:24px">
+        <a href="/Kite/ZerodhaSettings" style="color:var(--text-muted);font-size:13px;text-decoration:none">
+            <i class="fas fa-arrow-left"></i> Back to accounts
+        </a>
+        <h2 style="font-family:var(--font-head);font-size:18px;font-weight:700;margin:12px 0 0">Edit Account</h2>
+    </div>
+
+    <div class="card">
+        <form asp-action="EditAccount" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <div style="margin-bottom:20px">
+                <label asp-for="Nickname" style="display:block;font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Nickname</label>
+                <input asp-for="Nickname" class="field-input"
+                       style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text-primary);font-size:13px;outline:none" />
+                <span asp-validation-for="Nickname" style="font-size:11px;color:var(--red);margin-top:5px;display:block"></span>
+            </div>
+
+            <div style="margin-bottom:20px">
+                <label asp-for="ApiKey" style="display:block;font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">API Key</label>
+                <input asp-for="ApiKey" class="field-input" autocomplete="off"
+                       style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text-primary);font-size:13px;outline:none" />
+                <span asp-validation-for="ApiKey" style="font-size:11px;color:var(--red);margin-top:5px;display:block"></span>
+            </div>
+
+            <div style="margin-bottom:28px">
+                <label asp-for="ApiSecret" style="display:block;font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">API Secret</label>
+                <div style="position:relative">
+                    <input asp-for="ApiSecret" type="password" id="secretInput"
+                           placeholder="Leave blank to keep existing"
+                           autocomplete="new-password"
+                           style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 44px 11px 14px;color:var(--text-primary);font-size:13px;outline:none;box-sizing:border-box" />
+                    <button type="button" onclick="toggleSecret()"
+                            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:15px;padding:4px">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Leave blank to keep your existing secret.</div>
+            </div>
+
+            <div style="display:flex;gap:10px;padding-top:20px;border-top:1px solid var(--border)">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="/Kite/ZerodhaSettings" class="btn btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function toggleSecret() {
+    const i = document.getElementById('secretInput');
+    const ic = document.getElementById('toggleIcon');
+    i.type = i.type === 'password' ? 'text' : 'password';
+    ic.classList.toggle('fa-eye');
+    ic.classList.toggle('fa-eye-slash');
+}
+</script>
+}

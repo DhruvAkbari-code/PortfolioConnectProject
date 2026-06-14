@@ -1,7 +1,7 @@
-﻿using FinalSem2Project.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using FinalSem2Project.Filters;
+using FinalSem2Project.Helpers;
 using FinalSem2Project.Models;
-using FinalSem2Project.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinalSem2Project.Controllers
@@ -23,18 +23,52 @@ namespace FinalSem2Project.Controllers
             if (HttpContext.Session.GetString("UserEmail") == null)
                 return RedirectToAction("Login", "Account");
 
-            var accessToken = HttpContext.Session.GetString("AccessToken");
-            if (string.IsNullOrEmpty(accessToken))
-                return View(new PortfolioViewModel());
-
             var email = HttpContext.Session.GetString("UserEmail");
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _db.Users
+                .Include(u => u.ZerodhaAccounts)
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null || string.IsNullOrEmpty(user.ZerodhaApiKey))
-                return View(new PortfolioViewModel());
+            if (user == null)
+                return View(new MultiPortfolioViewModel());
 
-            var portfolio = await _kiteService.GetPortfolio(accessToken, user.ZerodhaApiKey);
-            return View(portfolio);
+            var tokens = KiteSessionHelper.GetTokens(HttpContext.Session);
+            var vm = new MultiPortfolioViewModel();
+
+            var tasks = user.ZerodhaAccounts.Select(async account =>
+            {
+                var accVm = new AccountPortfolioViewModel
+                {
+                    AccountId = account.Id,
+                    Nickname = account.Nickname,
+                    IsConnected = tokens.ContainsKey(account.Id)
+                };
+
+                if (accVm.IsConnected)
+                {
+                    try
+                    {
+                        var portfolio = await _kiteService.GetPortfolio(
+                            tokens[account.Id], account.ApiKey);
+
+                        accVm.Holdings = portfolio.Holdings;
+                        accVm.TotalValue = portfolio.TotalValue;
+                        accVm.TotalInvestment = portfolio.TotalInvestment;
+                        accVm.TotalProfitLoss = portfolio.TotalProfitLoss;
+                        accVm.TotalPnlPercentage = portfolio.TotalPnlPercentage;
+                    }
+                    catch
+                    {
+                        // Token expired — clear it so user sees reconnect prompt
+                        KiteSessionHelper.RemoveToken(HttpContext.Session, account.Id);
+                        accVm.IsConnected = false;
+                    }
+                }
+
+                return accVm;
+            });
+
+            vm.Accounts = (await Task.WhenAll(tasks)).ToList();
+            return View(vm);
         }
     }
 }

@@ -18,6 +18,8 @@ public partial class StockMarketDbContext : DbContext
     public virtual DbSet<StockTarget> StockTargets { get; set; }
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Watchlist> Watchlists { get; set; }
+    public virtual DbSet<ZerodhaAccount> ZerodhaAccounts{get;set;}
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -98,8 +100,24 @@ public partial class StockMarketDbContext : DbContext
                 .HasConstraintName("FK__watchlist__user___534D60F1");
         });
 
-        OnModelCreatingPartial(modelBuilder);
-    }
+        modelBuilder.Entity<ZerodhaAccount>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ZerodhaAccounts");
+            entity.ToTable("ZerodhaAccounts");
+            entity.HasIndex(e => e.UserId).HasDatabaseName("IX_ZerodhaAccounts_UserId");
+            entity.Property(e => e.Nickname).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.ApiKey).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.ApiSecret).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.AccessToken).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getutcdate())");
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.ZerodhaAccounts)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade)
+                  .HasConstraintName("FK_ZerodhaAccounts_Users");});
+
+                OnModelCreatingPartial(modelBuilder);
+            }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

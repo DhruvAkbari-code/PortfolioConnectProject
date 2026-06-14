@@ -40,4 +40,7 @@ public partial class User
 
     public virtual ICollection<Watchlist> Watchlists { get; set; } = new List<Watchlist>();
 
+    public virtual ICollection<ZerodhaAccount> ZerodhaAccounts { get; set; }
+        = new List<ZerodhaAccount>();
+
 }
