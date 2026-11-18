@@ -10,12 +10,11 @@ public interface IKiteService
 
 public class KiteServices : IKiteService
 {
-    // No constructor needed — no settings injected
-
     public string GetLoginUrl(string apiKey, int accountId, string baseUrl)
     {
-        var encodedParams = Uri.EscapeDataString($"accountId={accountId}");
-        return $"https://kite.zerodha.com/connect/login?v=3&api_key={Uri.EscapeDataString(apiKey)}&redirect_params={encodedParams}";
+        // No redirect_params — Zerodha does not relay custom params back.
+        // accountId is stored in session before redirecting (see ConnectAccount action).
+        return $"https://kite.zerodha.com/connect/login?v=3&api_key={apiKey}";
     }
 
     public async Task<KiteCallbackModel> GenerateSession(string requestToken, string apiKey, string apiSecret)
@@ -27,7 +26,7 @@ public class KiteServices : IKiteService
         KiteConnect.User user = kite.GenerateSession(requestToken, apiSecret);
 
         if (string.IsNullOrWhiteSpace(user.AccessToken))
-            return new KiteCallbackModel { Success = false, Message = "Failed to obtain Access" };
+            return new KiteCallbackModel { Success = false, Message = "Failed to obtain Access Token" };
 
         return new KiteCallbackModel
         {

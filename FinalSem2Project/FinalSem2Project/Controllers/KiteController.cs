@@ -46,9 +46,28 @@ namespace FinalSem2Project.Controllers
             return View(vm);
         }
 
-        // ── OAuth callback — accountId comes back via redirect_params
+        // ── ConnectAccount — saves accountId to session then redirects to Zerodha ──
 
-        public async Task<IActionResult> Callback(string request_token, string status, int accountId)
+        public async Task<IActionResult> ConnectAccount(int accountId)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var account = user.ZerodhaAccounts.FirstOrDefault(a => a.Id == accountId);
+            if (account == null) return NotFound();
+
+            // Store pending accountId in session before leaving for Zerodha
+            HttpContext.Session.SetInt32("PendingKiteAccountId", accountId);
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var loginUrl = _kiteService.GetLoginUrl(account.ApiKey, accountId, baseUrl);
+
+            return Redirect(loginUrl);
+        }
+
+        // ── OAuth callback — accountId is read from session (not from Zerodha) ────
+
+        public async Task<IActionResult> Callback(string request_token, string status)
         {
             var user = await GetCurrentUserAsync();
             if (user == null) return RedirectToAction("Login", "Account");
@@ -56,7 +75,19 @@ namespace FinalSem2Project.Controllers
             if (status != "success" || string.IsNullOrEmpty(request_token))
                 return View(new KiteCallbackModel { Success = false, Message = "Authentication cancelled." });
 
-            var account = user.ZerodhaAccounts.FirstOrDefault(a => a.Id == accountId);
+            // Read accountId from session (Zerodha does not return custom redirect_params)
+            var accountId = HttpContext.Session.GetInt32("PendingKiteAccountId");
+            if (accountId == null)
+                return View(new KiteCallbackModel
+                {
+                    Success = false,
+                    Message = "Session expired or no account pending. Please try connecting again."
+                });
+
+            // Clean up pending session key
+            HttpContext.Session.Remove("PendingKiteAccountId");
+
+            var account = user.ZerodhaAccounts.FirstOrDefault(a => a.Id == accountId.Value);
             if (account == null)
                 return View(new KiteCallbackModel { Success = false, Message = "Account not found." });
 
@@ -64,7 +95,7 @@ namespace FinalSem2Project.Controllers
 
             if (result.Success)
             {
-                KiteSessionHelper.SetToken(HttpContext.Session, accountId, result.AccessToken);
+                KiteSessionHelper.SetToken(HttpContext.Session, accountId.Value, result.AccessToken);
                 ViewBag.RedirectUrl = Url.Action("Index", "Dashboard");
                 ViewBag.RedirectDelay = 2000;
             }

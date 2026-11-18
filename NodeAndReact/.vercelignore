@@ -1,0 +1,23 @@
+# Local-only files that should not be uploaded to Vercel.
+server/.env
+.env
+.env.*
+!.env.example
+
+# Legacy SQLite import source (Neon is the real database)
+server/database.sqlite
+server/database.sqlite-shm
+server/database.sqlite-wal
+
+# Local uploads are written at runtime; Vercel stores avatars in PostgreSQL.
+server/uploads
+
+# Installed and generated locally; Vercel installs/builds from scratch.
+node_modules
+server/node_modules
+client/node_modules
+client/dist
+
+# Tooling / editor files
+.DS_Store
+*.log

@@ -14,8 +14,6 @@ namespace FinalSem2Project.Controllers
             _context = dbContext;
         }
 
-        // ── Login ────────────────────────────────────────────────────
-
         public IActionResult Login()
         {
             if (HttpContext.Session.GetString("UserEmail") != null)
@@ -60,8 +58,6 @@ namespace FinalSem2Project.Controllers
             return RedirectToAction("Index", "Trending");
         }
 
-        // ── Register ─────────────────────────────────────────────────
-
         public IActionResult Register()
         {
             if (HttpContext.Session.GetString("UserEmail") != null)
@@ -72,7 +68,6 @@ namespace FinalSem2Project.Controllers
         [HttpPost]
         public IActionResult Register(string fullname, string email, string password)
         {
-            // Presence check
             if (string.IsNullOrWhiteSpace(fullname) ||
                 string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(password))
@@ -81,28 +76,24 @@ namespace FinalSem2Project.Controllers
                 return View();
             }
 
-            // Full name length
             if (fullname.Trim().Length < 2)
             {
                 TempData["ErrorMessage"] = "Please enter your full name (at least 2 characters).";
                 return View();
             }
 
-            // Basic email format guard (HTML5 handles most, this catches edge cases)
             if (!email.Contains('@') || !email.Contains('.'))
             {
                 TempData["ErrorMessage"] = "Please enter a valid email address.";
                 return View();
             }
 
-            // Password length
             if (password.Length < 6)
             {
                 TempData["ErrorMessage"] = "Password must be at least 6 characters.";
                 return View();
             }
 
-            // ── Email already registered ──────────────────────────────
             var existing = _context.Users
                 .FirstOrDefault(u => u.Email.ToLower() == email.Trim().ToLower());
 
@@ -135,8 +126,6 @@ namespace FinalSem2Project.Controllers
             TempData["SuccessMessage"] = "Account created! Please sign in.";
             return RedirectToAction("Login");
         }
-
-        // ── Google OAuth ─────────────────────────────────────────────
 
         public IActionResult GoogleLogin()
         {
@@ -171,7 +160,6 @@ namespace FinalSem2Project.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Find or create the user
             var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
 
             if (user == null)
@@ -192,7 +180,6 @@ namespace FinalSem2Project.Controllers
             }
             else
             {
-                // Existing user — link Google ID if not already set
                 if (string.IsNullOrEmpty(user.GoogleId))
                     user.GoogleId = googleId;
 
@@ -203,22 +190,17 @@ namespace FinalSem2Project.Controllers
             user.LastLoginAt = DateTime.UtcNow;
             _context.SaveChanges();
 
-            // Sign the external cookie out so it doesn't persist
             await HttpContext.SignOutAsync("Cookies");
 
             SetSession(user);
             return RedirectToAction("Index", "Trending");
         }
 
-        // ── Logout ───────────────────────────────────────────────────
-
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login", "Account");
         }
-
-        // ── Helper ───────────────────────────────────────────────────
 
         private void SetSession(User user)
         {
@@ -233,15 +215,11 @@ namespace FinalSem2Project.Controllers
             HttpContext.Session.SetString("IsPremium", user.IsPremium.ToString());
         }
 
-
-
-        // GET /Account/ForgotPassword
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
-        // POST /Account/ForgotPassword — verify email exists
         [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
@@ -266,12 +244,10 @@ namespace FinalSem2Project.Controllers
                 return View();
             }
 
-            // Store email in session temporarily to verify on reset page
             HttpContext.Session.SetString("ResetEmail", email.Trim().ToLower());
             return RedirectToAction("ResetPassword");
         }
 
-        // GET /Account/ResetPassword
         public IActionResult ResetPassword()
         {
             // Must have come through ForgotPassword — no direct access
@@ -281,7 +257,6 @@ namespace FinalSem2Project.Controllers
             return View();
         }
 
-        // POST /Account/ResetPassword
         [HttpPost]
         public IActionResult ResetPassword(string newPassword, string confirmPassword)
         {
@@ -321,7 +296,6 @@ namespace FinalSem2Project.Controllers
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
             _context.SaveChanges();
 
-            // Clear reset session key
             HttpContext.Session.Remove("ResetEmail");
 
             TempData["SuccessMessage"] = "Password reset successfully! Please sign in.";

@@ -22,7 +22,6 @@ namespace FinalSem2Project.Controllers
         {
             if (CurrentUserEmail == null) return RedirectToAction("Login", "Account");
 
-            // Get userId from DB using email
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == CurrentUserEmail);
             if (user == null) return RedirectToAction("Login", "Account");
 
@@ -30,14 +29,14 @@ namespace FinalSem2Project.Controllers
                 .Where(w => w.UserId == user.Id)
                 .ToListAsync();
 
-            var priceTasks = items.Select(async item =>
+            var quoteTasks = items.Select(async item =>
             {
-                var livePrice = await _priceService.GetLivePriceAsync(item.StockSymbol);
-                return (item.StockSymbol, livePrice);
+                var quote = await _priceService.GetLiveQuoteAsync(item.StockSymbol);
+                return (item.StockSymbol, quote);
             });
 
-            var prices = await Task.WhenAll(priceTasks);
-            ViewBag.LivePrices = prices.ToDictionary(p => p.StockSymbol, p => p.livePrice);
+            var quotes = await Task.WhenAll(quoteTasks);
+            ViewBag.LiveQuotes = quotes.ToDictionary(q => q.StockSymbol, q => q.quote);
 
             return View(items);
         }
@@ -68,7 +67,7 @@ namespace FinalSem2Project.Controllers
             {
                 UserId = user.Id,
                 StockSymbol = stockSymbol.Trim().ToUpper(),
-                StockName = stockName?.Trim() ?? stockSymbol.ToUpper(),
+                StockName = !string.IsNullOrWhiteSpace(stockName) ? stockName.Trim() : stockSymbol.Trim().ToUpper(),
                 Exchange = exchange ?? "NSE",
                 PriceAtAdd = livePrice,
                 AddedAt = DateTime.Now
@@ -104,7 +103,7 @@ namespace FinalSem2Project.Controllers
             {
                 UserId = user.Id,
                 StockSymbol = stockSymbol.Trim().ToUpper(),
-                StockName = stockName,
+                StockName = !string.IsNullOrWhiteSpace(stockName) ? stockName.Trim() : stockSymbol.Trim().ToUpper(),
                 Exchange = exchange ?? "NSE",
                 PriceAtAdd = livePrice,
                 AddedAt = DateTime.Now

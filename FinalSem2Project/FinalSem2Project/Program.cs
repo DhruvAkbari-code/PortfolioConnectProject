@@ -18,15 +18,16 @@ builder.Services.AddScoped<IKiteService, KiteServices>();
 // builder.Services.AddScoped<StockPriceService>();
 
 // Replace with this single block:
-builder.Services.AddHttpClient<StockPriceService>()
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-    {
-        UseCookies = true,
-        CookieContainer = new System.Net.CookieContainer(),
-        AutomaticDecompression = System.Net.DecompressionMethods.GZip
-                               | System.Net.DecompressionMethods.Deflate
-                               | System.Net.DecompressionMethods.Brotli
-    });
+//builder.Services.AddHttpClient<StockPriceService>()
+//    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+//    {
+//        UseCookies = true,
+//        CookieContainer = new System.Net.CookieContainer(),
+//        AutomaticDecompression = System.Net.DecompressionMethods.GZip
+//                               | System.Net.DecompressionMethods.Deflate
+//                               | System.Net.DecompressionMethods.Brotli
+//    });
+builder.Services.AddSingleton<StockPriceService>();
 
 builder.Services.AddHttpClient();  // For Chat controller to call Flask API
 

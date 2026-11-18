@@ -78,14 +78,6 @@
                 </div>
 
                 <div class="content-area">
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="toast-msg toast-success"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
-                    }
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="toast-msg toast-error"><i class="fas fa-triangle-exclamation"></i> @TempData["ErrorMessage"]</div>
-                    }
                     @RenderBody()
                 </div>
             </main>
